@@ -75,7 +75,7 @@ world,/wɜːld/,世界,地球就是一个世界,2"></textarea>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
+                navigator.serviceWorker.register('./sw.js')
                     .then(registration => {
                         console.log('ServiceWorker 注册成功');
                     })
