@@ -23,6 +23,8 @@
             <div id="scoreBoard">
                 <div class="score-item">总分：<span id="score">0</span></div>
                 <div class="score-item">连续：<span id="streak">0</span></div>
+                <div class="score-item">已学：<span id="totalLearned">0</span></div>
+                <div class="score-item">正确率：<span id="correctRate">0%</span></div>
             </div>
         </header>
 
@@ -45,12 +47,29 @@
         <footer>
             <div class="button-group">
                 <button onclick="newWord()" class="primary-btn">下一词</button>
-                <button onclick="showHint()" class="secondary-btn">提示</button>
                 <button onclick="reviewMistakes()" class="secondary-btn">复习错词</button>
+                <button onclick="showImportDialog()" class="secondary-btn">批量添加</button>
             </div>
         </footer>
+
+        <!-- 添加导入弹窗 -->
+        <div id="importDialog" class="dialog">
+            <div class="dialog-content">
+                <h3>批量添加单词</h3>
+                <p>每行一个单词，格式：单词,音标,含义,记忆提示,难度</p>
+                <textarea id="wordInput" rows="10" placeholder="例如：
+hello,/həˈləʊ/,你好,打招呼的基础用语,1
+world,/wɜːld/,世界,地球就是一个世界,2"></textarea>
+                <div class="button-group">
+                    <button onclick="importWords()" class="primary-btn">导入</button>
+                    <button onclick="closeImportDialog()" class="secondary-btn">取消</button>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <!-- 在其他 script 标签之前添加 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="wordlist.js"></script>
     <script src="wordmaster.js"></script>
     <script>
