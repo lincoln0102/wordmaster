@@ -2,29 +2,69 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>游戏启动器</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: #FFE6F2;
-        }
-        a {
-            padding: 20px 40px;
-            background: #FF69B4;
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
-            font-size: 24px;
-            font-family: sans-serif;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-512.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="背单词神器">
+    <meta name="theme-color" content="#4a90e2">
+    <title>背单词神器</title>
+    <link rel="stylesheet" href="wordmaster.css">
 </head>
 <body>
-    <a href="numberspell.html">开始游戏</a>
+    <div id="splashScreen" class="splash-screen">
+        <img src="icon-192.png" alt="背单词神器">
+        <p>背单词神器</p>
+    </div>
+    <div class="container">
+        <header>
+            <div id="scoreBoard">
+                <div class="score-item">总分：<span id="score">0</span></div>
+                <div class="score-item">连续：<span id="streak">0</span></div>
+            </div>
+        </header>
+
+        <main>
+            <div id="wordCard">
+                <div class="word-header">
+                    <span id="currentWord" class="word-text">Welcome</span>
+                    <button onclick="playCurrentWord()" class="sound-btn">🔊</button>
+                </div>
+                <div id="phonetic" class="phonetic">/ˈwelkəm/</div>
+                <div id="meaning" class="meaning">欢迎</div>
+                <div id="memoryTip" class="memory-tip">记忆提示：well(好) + come(来) = 欢迎</div>
+            </div>
+
+            <div id="slots" class="slots-container"></div>
+            <div id="letters" class="letters-container"></div>
+            <div id="feedback" class="feedback"></div>
+        </main>
+
+        <footer>
+            <div class="button-group">
+                <button onclick="newWord()" class="primary-btn">下一词</button>
+                <button onclick="showHint()" class="secondary-btn">提示</button>
+                <button onclick="reviewMistakes()" class="secondary-btn">复习错词</button>
+            </div>
+        </footer>
+    </div>
+
+    <script src="wordlist.js"></script>
+    <script src="wordmaster.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker 注册成功');
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker 注册失败: ', err);
+                    });
+            });
+        }
+    </script>
 </body>
 </html>
