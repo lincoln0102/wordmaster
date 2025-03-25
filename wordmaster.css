@@ -190,3 +190,35 @@ button:active {
     border: 1px solid #ddd;
     border-radius: 5px;
 }
+
+.letter-btn {
+    font-size: 24px;
+    padding: 15px 20px;
+    margin: 8px;
+    border-radius: 8px;
+    border: none;
+    background-color: #4a90e2;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    touch-action: manipulation;
+}
+
+.letter-btn.used {
+    opacity: 0.5;
+    background-color: #ccc;
+    pointer-events: none;
+}
+
+.slot {
+    font-size: 24px;
+    padding: 15px 20px;
+    margin: 8px;
+    border: 2px dashed #4a90e2;
+    border-radius: 8px;
+    min-width: 50px;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

@@ -530,3 +530,70 @@ function generateSign(text, appKey) {
     const str = appKey + input + salt + curtime;
     return CryptoJS.SHA256(str).toString();
 }
+
+function initializeLetters(word) {
+    const lettersContainer = document.getElementById('letters');
+    lettersContainer.innerHTML = '';
+    
+    const shuffledLetters = word.split('').sort(() => Math.random() - 0.5);
+    
+    shuffledLetters.forEach((letter, index) => {
+        const letterButton = document.createElement('button');
+        letterButton.className = 'letter-btn';
+        letterButton.textContent = letter;
+        letterButton.setAttribute('data-index', index);
+        
+        // 单击事件
+        letterButton.addEventListener('click', function() {
+            if (this.classList.contains('used')) {
+                // 如果字母已被使用，找到对应的槽并清空
+                const slots = document.querySelectorAll('.slot');
+                slots.forEach(slot => {
+                    if (slot.textContent === letter) {
+                        slot.textContent = '';
+                        this.classList.remove('used');
+                    }
+                });
+            } else {
+                // 如果字母未使用，填入第一个空槽
+                const emptySlot = document.querySelector('.slot:empty');
+                if (emptySlot) {
+                    emptySlot.textContent = letter;
+                    this.classList.add('used');
+                    checkWord();
+                }
+            }
+        });
+        
+        lettersContainer.appendChild(letterButton);
+    });
+}
+
+// 添加提示按钮
+function addHintButton() {
+    const footer = document.querySelector('footer .button-group');
+    const hintButton = document.createElement('button');
+    hintButton.className = 'secondary-btn';
+    hintButton.textContent = '提示';
+    hintButton.onclick = showHint;
+    footer.appendChild(hintButton);
+}
+
+// 显示提示
+function showHint() {
+    const currentWord = document.getElementById('currentWord').textContent;
+    const firstLetter = currentWord[0];
+    const slots = document.querySelectorAll('.slot');
+    const letters = document.querySelectorAll('.letter-btn');
+    
+    // 清空第一个槽并填入正确的字母
+    if (slots[0]) {
+        slots[0].textContent = firstLetter;
+        // 找到对应的字母按钮并标记为已使用
+        letters.forEach(letter => {
+            if (letter.textContent === firstLetter) {
+                letter.classList.add('used');
+            }
+        });
+    }
+}
