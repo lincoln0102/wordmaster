@@ -1,0 +1,124 @@
+body {
+    background: #FFE6F2;
+    font-family: 'Arial', 'Helvetica', sans-serif;
+    text-align: center;
+    padding: 20px;
+    transition: background 0.3s;
+}
+
+.letter {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    margin: 7px;
+    background: #FFB6C1;
+    border-radius: 10px;
+    cursor: move;
+    box-shadow: 3px 3px #FF69B4;
+    font-weight: 800;
+    user-select: none;
+    touch-action: none;
+    font-family: 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 27px;
+    text-transform: uppercase;
+}
+
+.slot {
+    display: inline-block;
+    width: 65px;
+    height: 65px;
+    margin: 7px;
+    border: 3px dashed #FF69B4;
+    border-radius: 10px;
+    background: white;
+}
+
+#scoreBoard {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #FF69B4;
+    color: white;
+    padding: 15px 30px;
+    border-radius: 15px;
+    box-shadow: 3px 3px #FFB6C1;
+    font-size: 27px;
+}
+
+#wordDisplay {
+    color: #FF69B4;
+    font-size: 36px;
+    margin: 30px;
+    text-shadow: 2px 2px #FFF;
+}
+
+#feedback {
+    font-size: 42px;
+    margin-top: 20px;
+    min-height: 40px;
+}
+
+button {
+    background: #FF69B4;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-size: 27px;
+    margin: 30px;
+    cursor: pointer;
+    box-shadow: 3px 3px #FFB6C1;
+    transition: transform 0.1s;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+.sound-btn {
+    width: 60px;
+    height: 60px;
+    font-size: 30px;
+}
+
+/* iPad 适配样式 */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .letter {
+        width: 90px;
+        height: 90px;
+        line-height: 90px;
+        font-size: 42px;
+        margin: 15px;
+        font-family: 'Arial Black', 'Arial Bold', sans-serif;
+        font-weight: 900;
+    }
+    
+    .slot {
+        width: 95px;
+        height: 95px;
+        margin: 15px;
+    }
+
+    #wordDisplay {
+        font-size: 63px;
+    }
+
+    button {
+        font-size: 42px;
+    }
+
+    #scoreBoard {
+        font-size: 42px;
+    }
+
+    #feedback {
+        font-size: 54px;
+    }
+
+    .sound-btn {
+        width: 90px;
+        height: 90px;
+        font-size: 45px;
+    }
+}

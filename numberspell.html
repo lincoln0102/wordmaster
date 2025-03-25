@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-512.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="数字拼写">
+    <title>数字拼写游戏</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="scoreBoard">总分：<span id="score">0</span></div>
+    <div id="wordDisplay">
+        数字: <span id="currentNumber">?</span>
+        <button onclick="playCurrentWord()" class="sound-btn">🔊</button>
+    </div>
+    <div id="slots"></div>
+    <div id="letters"></div>
+    <div id="feedback"></div>
+    <button onclick="newWord()">开始挑战</button>
+    <button onclick="resetGame()">重新开始</button>
+
+    <script src="game.js"></script>
+</body>
+</html>

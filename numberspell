@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>数字拼写游戏</title>
+    <style>
+        body {
+            background: #FFE6F2;
+            font-family: 'Comic Sans MS', cursive;
+            text-align: center;
+            padding: 20px;
+            transition: background 0.3s;
+        }
+        #scoreBoard {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #FF69B4;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 15px;
+            box-shadow: 3px 3px #FFB6C1;
+        }
+        #wordDisplay {
+            color: #FF69B4;
+            font-size: 24px;
+            margin: 20px;
+            text-shadow: 2px 2px #FFF;
+        }
+        .letter {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            margin: 5px;
+            background: #FFB6C1;
+            border-radius: 10px;
+            line-height: 40px;
+            cursor: move;
+            box-shadow: 3px 3px #FF69B4;
+            font-weight: bold;
+            user-select: none;
+            touch-action: none;
+        }
+        .slot {
+            display: inline-block;
+            width: 45px;
+            height: 45px;
+            margin: 5px;
+            border: 3px dashed #FF69B4;
+            border-radius: 10px;
+            background: white;
+        }
+        #feedback {
+            font-size: 28px;
+            margin-top: 20px;
+            min-height: 40px;
+        }
+        button {
+            background: #FF69B4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 18px;
+            margin: 20px;
+            cursor: pointer;
+            box-shadow: 3px 3px #FFB6C1;
+            transition: transform 0.1s;
+        }
+        button:active {
+            transform: scale(0.95);
+        }
+        @media (max-width: 600px) {
+            .letter, .slot {
+                width: 30px;
+                height: 30px;
+                line-height: 30px;
+                font-size: 14px;
+            }
+        }
+        
+        /* 添加 iPad 优化样式 */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .letter, .slot {
+                width: 60px;
+                height: 60px;
+                line-height: 60px;
+                font-size: 28px;
+                margin: 10px;
+            }
+            #wordDisplay {
+                font-size: 42px;
+                margin: 30px;
+            }
+            button {
+                font-size: 28px;
+                padding: 15px 30px;
+                margin: 30px;
+            }
+            #scoreBoard {
+                font-size: 28px;
+                padding: 15px 30px;
+            }
+            #feedback {
+                font-size: 36px;
+            }
+        }
+        /* 防止 iPad 上的默认行为 */
+        * {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <div id="scoreBoard">总分：<span id="score">0</span></div>
+    <div id="wordDisplay">数字: <span id="currentNumber">?</span></div>
+    <div id="slots"></div>
+    <div id="letters"></div>
+    <div id="feedback"></div>
+    <button onclick="newWord()">开始挑战</button>
+    <button onclick="resetGame()">重新开始</button>
+
+    <script>
+        const wordList = [
+            { number: 1, word: "one" },
+            { number: 2, word: "two" },
+            { number: 3, word: "three" },
+            { number: 4, word: "four" },
+            { number: 5, word: "five" },
+            { number: 6, word: "six" },
+            { number: 7, word: "seven" },
+            { number: 8, word: "eight" },
+            { number: 9, word: "nine" },
+            { number: 10, word: "ten" },
+            { number: 11, word: "eleven" },
+            { number: 12, word: "twelve" },
+            { number: 13, word: "thirteen" },
+            { number: 14, word: "fourteen" },
+            { number: 15, word: "fifteen" },
+            { number: 16, word: "sixteen" },
+            { number: 17, word: "seventeen" },
+            { number: 18, word: "eighteen" },
+            { number: 19, word: "nineteen" },
+            { number: 20, word: "twenty" }
+        ];
+
+        let currentWord = null;
+        let score = 0;
+        
+        // 替换在线音效为 Base64 编码的音效数据
+        const correctSound = new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//tQwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAADAAAGhgBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVWqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr///////////////////////////////////////////8AAAAATGF2YzU4LjU0AAAAAAAAAAAAAAAAJAAAAAAAAAAAAYbUxJfmAAAA//tQxAADwAABpAAAACAAADSAAAAETEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//tQxBmDwAABpAAAACAAADSAAAAEVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//tQxDSDwAABpAAAACAAADSAAAAEVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV');
+        const wrongSound = new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//tQwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAADAAAGhgBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVWqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr///////////////////////////////////////////8AAAAATGF2YzU4LjU0AAAAAAAAAAAAAAAAJAAAAAAAAAAAAYbf/LLUAAAA//tQxAADwAABpAAAACAAADSAAAAETEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//tQxBmDwAABpAAAACAAADSAAAAEVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//tQxDSDwAABpAAAACAAADSAAAAEVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV');
+
+        function updateScore(points) {
+            score += points;
+            document.getElementById('score').textContent = score;
+        }
+
+        function resetGame() {
+            score = 0;
+            document.getElementById('score').textContent = '0';
+            document.getElementById('feedback').innerHTML = '';
+            document.body.style.background = '#FFE6F2';
+            newWord();
+        }
+
+        function newWord() {
+            currentWord = wordList[Math.floor(Math.random()*wordList.length)];
+            document.getElementById('currentNumber').textContent = currentWord.number;
+            document.getElementById('feedback').innerHTML = '';
+            document.body.style.background = '#FFE6F2';
+            setupGame();
+        }
+
+        function setupGame() {
+            const letters = currentWord.word.split('').sort(() => Math.random()-0.5);
+            const slots = document.getElementById('slots');
+            const letterContainer = document.getElementById('letters');
+            
+            slots.innerHTML = letters.map(() => 
+                `<div class="slot" ondrop="drop(event)" ondragover="allowDrop(event)"></div>`
+            ).join('');
+            
+            letterContainer.innerHTML = letters.map(letter => 
+                `<div class="letter" draggable="true" ondragstart="drag(event)" 
+                      ontouchstart="touchStart(event)" ontouchmove="touchMove(event)" 
+                      ontouchend="touchEnd(event)">${letter}</div>`
+            ).join('');
+        }
+
+        function allowDrop(ev) { ev.preventDefault(); }
+        function drag(ev) { ev.dataTransfer.setData("text", ev.target.textContent); }
+
+        // 添加触摸支持
+        let touchElement = null;
+        
+        function touchStart(event) {
+            touchElement = event.target;
+            event.target.style.opacity = '0.5';
+        }
+
+        function touchMove(event) {
+            if (!touchElement) return;
+            
+            event.preventDefault();
+            const touch = event.touches[0];
+            touchElement.style.position = 'fixed';
+            touchElement.style.left = touch.pageX - 20 + 'px';
+            touchElement.style.top = touch.pageY - 20 + 'px';
+        }
+
+        function touchEnd(event) {
+            if (!touchElement) return;
+            
+            const slots = document.querySelectorAll('.slot');
+            const touch = event.changedTouches[0];
+            let dropped = false;
+            
+            slots.forEach(slot => {
+                const rect = slot.getBoundingClientRect();
+                if (touch.pageX >= rect.left && touch.pageX <= rect.right &&
+                    touch.pageY >= rect.top && touch.pageY <= rect.bottom &&
+                    slot.children.length === 0) {
+                    slot.innerHTML = `<div class="letter">${touchElement.textContent}</div>`;
+                    dropped = true;
+                    checkAnswer();
+                }
+            });
+            
+            touchElement.style.position = '';
+            touchElement.style.opacity = '1';
+            touchElement = null;
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text");
+            const targetSlot = ev.target.classList.contains('slot') ? ev.target : ev.target.parentNode;
+            
+            if(targetSlot.children.length === 0) {
+                targetSlot.innerHTML = `<div class="letter">${data}</div>`;
+                checkAnswer();
+            }
+        }
+
+        function checkAnswer() {
+            const slots = [...document.querySelectorAll('.slot')];
+            const answer = slots.map(slot => 
+                slot.children[0]?.textContent || ''
+            ).join('');
+
+            if(answer === currentWord.word) {
+                document.getElementById('feedback').innerHTML = "🎉 正确！+5分";
+                document.body.style.background = "#B9F6CA";
+                updateScore(5);
+                correctSound.play().catch(e => console.log('音效播放失败'));
+                setTimeout(newWord, 1500);
+            } else if(slots.every(s => s.children.length > 0)) {
+                document.getElementById('feedback').innerHTML = "❌ 再试试~";
+                document.body.style.background = "#FFCDD2";
+                wrongSound.play().catch(e => console.log('音效播放失败'));
+                setTimeout(() => slots.forEach(s => s.innerHTML = ""), 800);
+            }
+        }
+    </script>
+</body>
+</html>
