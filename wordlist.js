@@ -21,10 +21,10 @@ const wordList = [
         difficulty: 2
     },
     {
-        word: "fingers",
-        phonetic: "/ˈfɪŋ.ɡərz/",
+        word: "finger",
+        phonetic: "/ˈfɪŋ.ɡər/",
         meaning: "手指",
-        memoryTip: "fin(鱼鳍) + gers，想象手指像鱼的鳍一样灵活",
+        memoryTip: "fin(鱼鳍) + ger，想象手指像鱼的鳍一样灵活",
         difficulty: 2
     },
     {
@@ -42,10 +42,10 @@ const wordList = [
         difficulty: 1
     },
     {
-        word: "hands",
-        phonetic: "/hændz/",
+        word: "hand",
+        phonetic: "/hænd/",
         meaning: "手",
-        memoryTip: "hand + s，想象两只手在打招呼(hi)",
+        memoryTip: "想象一只手在打招呼(hi)",
         difficulty: 1
     },
     {
