@@ -82,5 +82,75 @@ const wordList = [
         meaning: "剪、修剪",
         memoryTip: "发音像'咔嚓'的声音，剪指甲的声音",
         difficulty: 2
+    },
+    {
+        word: "one",
+        phonetic: "/wʌn/",
+        meaning: "一",
+        memoryTip: "长元音o发/wʌ/音，ne发/n/音",
+        difficulty: 1
+    },
+    {
+        word: "two",
+        phonetic: "/tuː/",
+        meaning: "二",
+        memoryTip: "tw组合发/t/音，o在词尾发/uː/音",
+        difficulty: 1
+    },
+    {
+        word: "three",
+        phonetic: "/θriː/",
+        meaning: "三",
+        memoryTip: "th发/θ/音，ee组合发/iː/音",
+        difficulty: 1
+    },
+    {
+        word: "four",
+        phonetic: "/fɔː/",
+        meaning: "四",
+        memoryTip: "our组合在此发/ɔː/音",
+        difficulty: 1
+    },
+    {
+        word: "five",
+        phonetic: "/faɪv/",
+        meaning: "五",
+        memoryTip: "i_e模式，i发/aɪ/音，ve发/v/音",
+        difficulty: 1
+    },
+    {
+        word: "six",
+        phonetic: "/sɪks/",
+        meaning: "六",
+        memoryTip: "i在闭音节中发短音/ɪ/，x发/ks/音",
+        difficulty: 1
+    },
+    {
+        word: "seven",
+        phonetic: "/ˈsev.ən/",
+        meaning: "七",
+        memoryTip: "e在开音节发/e/音，en发/ən/音",
+        difficulty: 1
+    },
+    {
+        word: "eight",
+        phonetic: "/eɪt/",
+        meaning: "八",
+        memoryTip: "ei组合发/eɪ/音，gh不发音，t发/t/音",
+        difficulty: 1
+    },
+    {
+        word: "nine",
+        phonetic: "/naɪn/",
+        meaning: "九",
+        memoryTip: "i_e模式，i发/aɪ/音，e不发音",
+        difficulty: 1
+    },
+    {
+        word: "ten",
+        phonetic: "/ten/",
+        meaning: "十",
+        memoryTip: "e在闭音节中发短音/e/",
+        difficulty: 1
     }
 ];
