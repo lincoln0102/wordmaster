@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小朋友英语单词学习</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .title {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .mode-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .mode-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ffa726);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .mode-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        .mode-btn.active {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+        }
+        
+        .word-section {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .word-display {
+            font-size: 3em;
+            color: #667eea;
+            margin: 20px 0;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .word-meaning {
+            font-size: 1.3em;
+            color: #666;
+            margin: 15px 0;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #4ecdc4;
+        }
+        
+        .word-sentence {
+            font-size: 1.1em;
+            color: #888;
+            font-style: italic;
+            margin-top: 10px;
+        }
+        
+        .control-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .control-btn {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        
+        .control-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .spelling-section {
+            display: none;
+        }
+        
+        .spelling-input {
+            font-size: 1.5em;
+            padding: 15px;
+            border: 3px solid #ddd;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .spelling-input:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+        }
+        
+        .result-message {
+            font-size: 1.2em;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+        
+        .correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+        
+        .incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+        
+        .progress-bar {
+            background: #e0e0e0;
+            height: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+            z-index: 1;
+        }
+        
+        .star-animation {
+            display: inline-block;
+            animation: bounce 0.6s ease-in-out infinite alternate;
+        }
+        
+        @keyframes bounce {
+            from { transform: scale(1); }
+            to { transform: scale(1.2); }
+        }
+        
+        .day-selector {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .study-mode {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .mode-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        
+        .mode-option input[type="radio"] {
+            transform: scale(1.2);
+        }
+        
+        .day-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .day-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .day-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .day-display {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .day-info {
+            font-size: 1em;
+            color: #666;
+            text-align: center;
+            margin-top: 10px;
+            width: 100%;
+        }
+        
+        .day-controls.hidden {
+            display: none;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🌟 英语单词学习 🌟</h1>
+        
+        <div class="mode-buttons">
+            <button class="mode-btn active" onclick="setMode('review')">📚 单词复习</button>
+            <button class="mode-btn" onclick="setMode('spelling')">✏️ 拼写练习</button>
+        </div>
+        
+        <!-- 学习模式选择 -->
+        <div class="day-selector">
+            <div class="study-mode">
+                <label class="mode-option">
+                    <input type="radio" name="study-mode" id="day-mode" checked onchange="switchStudyMode()">
+                    <span class="mode-text">📅 按天学习</span>
+                </label>
+                <label class="mode-option">
+                    <input type="radio" name="study-mode" id="all-mode" onchange="switchStudyMode()">
+                    <span class="mode-text">📖 全部单词</span>
+                </label>
+            </div>
+            
+            <div class="day-controls" id="day-controls">
+                <button class="day-btn" onclick="changeDay(-1)">⬅️</button>
+                <span class="day-display" id="day-display">第 1 天</span>
+                <button class="day-btn" onclick="changeDay(1)">➡️</button>
+                <div class="day-info" id="day-info">今天要学习 6 个单词</div>
+            </div>
+        </div>
+        
+        <!-- 复习模式 -->
+        <div id="review-mode" class="word-section">
+            <div class="word-display" id="current-word">点击开始学习</div>
+            <div class="word-meaning" id="word-meaning">准备好了吗？让我们开始学习英语单词吧！</div>
+            <div class="word-sentence" id="word-sentence"></div>
+            
+            <div class="control-buttons">
+                <button class="control-btn" onclick="speakWord()">🔊 发音</button>
+                <button class="control-btn" onclick="showMeaning()">💡 显示中文</button>
+                <button class="control-btn" onclick="nextWord()">➡️ 下一个</button>
+            </div>
+        </div>
+        
+        <!-- 拼写练习模式 -->
+        <div id="spelling-mode" class="word-section spelling-section">
+            <div class="word-meaning" id="spelling-meaning">听音拼写单词</div>
+            <input type="text" class="spelling-input" id="spelling-input" placeholder="在这里输入单词..." maxlength="20">
+            
+            <div class="control-buttons">
+                <button class="control-btn" onclick="playSpellingWord()">🔊 播放发音</button>
+                <button class="control-btn" onclick="checkSpelling()">✅ 检查拼写</button>
+                <button class="control-btn" onclick="nextSpellingWord()">➡️ 下一个</button>
+            </div>
+            
+            <div id="spelling-result" class="result-message hidden"></div>
+        </div>
+        
+        <!-- 进度条 -->
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill" style="width: 0%;">
+                <div class="progress-text" id="progress-text">0 / 0</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Molly的暑假单词库 - 8天学习计划
+        const dailyWordList = {
+            1: [
+                {word: "morning", meaning: "早上", sentence: "Good morning, everyone!"},
+                {word: "afternoon", meaning: "下午", sentence: "See you this afternoon."},
+                {word: "book", meaning: "书", sentence: "I read a book every day."},
+                {word: "ruler", meaning: "尺子", sentence: "Use a ruler to draw a line."},
+                {word: "pencil", meaning: "铅笔", sentence: "I write with a pencil."},
+                {word: "rubber", meaning: "橡皮", sentence: "Use the rubber to erase mistakes."}
+            ],
+            2: [
+                {word: "eye", meaning: "眼睛", sentence: "I can see with my eyes."},
+                {word: "mouth", meaning: "嘴巴", sentence: "I eat with my mouth."},
+                {word: "face", meaning: "脸", sentence: "Wash your face every morning."},
+                {word: "nose", meaning: "鼻子", sentence: "I smell flowers with my nose."},
+                {word: "ear", meaning: "耳朵", sentence: "I hear music with my ears."},
+                {word: "dance", meaning: "跳舞", sentence: "I like to dance to music."},
+                {word: "read", meaning: "读", sentence: "I read books every night."},
+                {word: "sing", meaning: "唱歌", sentence: "She can sing very well."},
+                {word: "draw", meaning: "画", sentence: "I draw pictures in art class."}
+            ],
+            3: [
+                {word: "grandfather", meaning: "爷爷", sentence: "My grandfather is very kind."},
+                {word: "grandmother", meaning: "奶奶", sentence: "Grandmother makes delicious cookies."},
+                {word: "father", meaning: "爸爸", sentence: "My father goes to work every day."},
+                {word: "mother", meaning: "妈妈", sentence: "Mother cooks dinner for us."},
+                {word: "me", meaning: "我", sentence: "This is me in the photo."},
+                {word: "fat", meaning: "胖的", sentence: "The cat is fat and lazy."},
+                {word: "thin", meaning: "瘦的", sentence: "She is tall and thin."},
+                {word: "tall", meaning: "高的", sentence: "The tree is very tall."},
+                {word: "short", meaning: "矮的", sentence: "My brother is short but strong."}
+            ],
+            4: [
+                {word: "one", meaning: "一", sentence: "I have one apple."},
+                {word: "two", meaning: "二", sentence: "There are two cats."},
+                {word: "three", meaning: "三", sentence: "I see three birds."},
+                {word: "four", meaning: "四", sentence: "Four seasons in a year."},
+                {word: "five", meaning: "五", sentence: "I have five fingers."},
+                {word: "six", meaning: "六", sentence: "Six eggs in the box."},
+                {word: "apple", meaning: "苹果", sentence: "The apple is red and sweet."},
+                {word: "peach", meaning: "桃子", sentence: "This peach is very juicy."},
+                {word: "orange", meaning: "橙子", sentence: "I like orange juice."}
+            ],
+            5: [
+                {word: "hamburger", meaning: "汉堡包", sentence: "I eat a hamburger for lunch."},
+                {word: "pizza", meaning: "披萨", sentence: "Pizza is my favorite food."},
+                {word: "cake", meaning: "蛋糕", sentence: "We have cake on birthdays."},
+                {word: "pie", meaning: "馅饼", sentence: "Apple pie smells wonderful."},
+                {word: "chick", meaning: "小鸡", sentence: "The yellow chick is so cute."},
+                {word: "duck", meaning: "鸭子", sentence: "Ducks swim in the pond."},
+                {word: "cow", meaning: "奶牛", sentence: "Cows give us milk."},
+                {word: "pig", meaning: "猪", sentence: "The pig likes to roll in mud."}
+            ],
+            6: [
+                {word: "bear", meaning: "熊", sentence: "The bear lives in the forest."},
+                {word: "tiger", meaning: "老虎", sentence: "Tigers are strong animals."},
+                {word: "monkey", meaning: "猴子", sentence: "Monkeys like to eat bananas."},
+                {word: "panda", meaning: "熊猫", sentence: "Pandas are black and white."},
+                {word: "red", meaning: "红色", sentence: "The rose is red."},
+                {word: "blue", meaning: "蓝色", sentence: "The sky is blue."},
+                {word: "yellow", meaning: "黄色", sentence: "The sun is yellow."},
+                {word: "green", meaning: "绿色", sentence: "Grass is green."}
+            ],
+            7: [
+                {word: "frog", meaning: "青蛙", sentence: "Frogs can jump very high."},
+                {word: "rabbit", meaning: "兔子", sentence: "Rabbits have long ears."},
+                {word: "bee", meaning: "蜜蜂", sentence: "Bees make honey."},
+                {word: "bird", meaning: "鸟", sentence: "Birds can fly in the sky."},
+                {word: "sheep", meaning: "羊", sentence: "Sheep have soft wool."},
+                {word: "hen", meaning: "母鸡", sentence: "The hen lays eggs."},
+                {word: "dog", meaning: "狗", sentence: "Dogs are loyal friends."},
+                {word: "cat", meaning: "猫", sentence: "My cat likes to sleep."}
+            ],
+            8: [
+                {word: "rice", meaning: "米饭", sentence: "I eat rice every day."},
+                {word: "soup", meaning: "汤", sentence: "The soup is hot and tasty."},
+                {word: "egg", meaning: "鸡蛋", sentence: "I have eggs for breakfast."},
+                {word: "noodles", meaning: "面条", sentence: "Noodles are delicious."},
+                {word: "ball", meaning: "球", sentence: "Let's play with the ball."},
+                {word: "doll", meaning: "娃娃", sentence: "She loves her doll."},
+                {word: "bicycle", meaning: "自行车", sentence: "I ride my bicycle to school."},
+                {word: "kite", meaning: "风筝", sentence: "The kite flies high in the sky."}
+            ]
+        };
+
+        // 全局变量
+        let currentMode = 'review';
+        let currentWordIndex = 0;
+        let currentSpellingIndex = 0;
+        let showingMeaning = false;
+        let correctAnswers = 0;
+        let totalAttempts = 0;
+        let currentDay = 1;
+        let allWords = [];
+
+        // 初始化单词列表
+        function initializeWords() {
+            allWords = [];
+            Object.keys(dailyWordList).forEach(day => {
+                allWords = allWords.concat(dailyWordList[day]);
+            });
+        }
+
+        // 获取当前天的单词
+        function getCurrentDayWords() {
+            return dailyWordList[currentDay] || [];
+        }
+
+        // 获取当前使用的单词列表
+        function getWordList() {
+            if (document.getElementById('day-mode').checked) {
+                return getCurrentDayWords();
+            } else {
+                return allWords;
+            }
+        }
+
+        // 切换学习模式
+        function switchStudyMode() {
+            const dayMode = document.getElementById('day-mode').checked;
+            const dayControls = document.getElementById('day-controls');
+            
+            if (dayMode) {
+                dayControls.classList.remove('hidden');
+            } else {
+                dayControls.classList.add('hidden');
+            }
+            
+            // 重置当前模式
+            if (currentMode === 'review') {
+                resetReviewMode();
+            } else {
+                resetSpellingMode();
+            }
+        }
+
+        // 切换学习天数
+        function changeDay(direction) {
+            const totalDays = Object.keys(dailyWordList).length;
+            currentDay += direction;
+            
+            if (currentDay < 1) currentDay = totalDays;
+            if (currentDay > totalDays) currentDay = 1;
+            
+            updateDayDisplay();
+            
+            // 重置当前模式
+            if (currentMode === 'review') {
+                resetReviewMode();
+            } else {
+                resetSpellingMode();
+            }
+        }
+
+        // 更新天数显示
+        function updateDayDisplay() {
+            const dayWords = getCurrentDayWords();
+            document.getElementById('day-display').textContent = `第 ${currentDay} 天`;
+            document.getElementById('day-info').textContent = `今天要学习 ${dayWords.length} 个单词`;
+        }
+
+        // 设置模式
+        function setMode(mode) {
+            currentMode = mode;
+            
+            // 更新按钮状态
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // 显示对应模式
+            if (mode === 'review') {
+                document.getElementById('review-mode').style.display = 'block';
+                document.getElementById('spelling-mode').style.display = 'none';
+                resetReviewMode();
+            } else {
+                document.getElementById('review-mode').style.display = 'none';
+                document.getElementById('spelling-mode').style.display = 'block';
+                resetSpellingMode();
+            }
+            
+            updateProgress();
+        }
+
+        // 复习模式函数
+        function resetReviewMode() {
+            currentWordIndex = 0;
+            showingMeaning = false;
+            displayCurrentWord();
+        }
+
+        function displayCurrentWord() {
+            const wordList = getWordList();
+            if (wordList.length === 0) return;
+            
+            const word = wordList[currentWordIndex];
+            document.getElementById('current-word').textContent = word.word;
+            document.getElementById('word-meaning').textContent = showingMeaning ? word.meaning : "点击'显示中文'查看含义";
+            document.getElementById('word-sentence').textContent = showingMeaning ? word.sentence : "";
+        }
+
+        function speakWord() {
+            const wordList = getWordList();
+            if (wordList.length === 0) return;
+            
+            const word = wordList[currentWordIndex].word;
+            const utterance = new SpeechSynthesisUtterance(word);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.8;
+            speechSynthesis.speak(utterance);
+        }
+
+        function showMeaning() {
+            showingMeaning = true;
+            displayCurrentWord();
+        }
+
+        function nextWord() {
+            const wordList = getWordList();
+            if (wordList.length === 0) return;
+            
+            currentWordIndex = (currentWordIndex + 1) % wordList.length;
+            showingMeaning = false;
+            displayCurrentWord();
+            updateProgress();
+        }
+
+        // 拼写练习模式函数
+        function resetSpellingMode() {
+            currentSpellingIndex = 0;
+            correctAnswers = 0;
+            totalAttempts = 0;
+            document.getElementById('spelling-input').value = '';
+            document.getElementById('spelling-result').classList.add('hidden');
+            displaySpellingWord();
+        }
+
+        function displaySpellingWord() {
+            const wordList = getWordList();
+            if (wordList.length === 0) return;
+            
+            const word = wordList[currentSpellingIndex];
+            document.getElementById('spelling-meaning').textContent = `请拼写：${word.meaning}`;
+            document.getElementById('spelling-input').value = '';
+            document.getElementById('spelling-result').classList.add('hidden');
+        }
+
+        function playSpellingWord() {
+            const wordList = getWordList();
+            if (wordList.length === 0) return;
+            
+            const word = wordList[currentSpellingIndex].word;
+            const utterance = new SpeechSynthesisUtterance(word);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.8;
+            speechSynthesis.speak(utterance);
+        }
+
+        function checkSpelling() {
+            const wordList = getWordList();
+            if (wordList.length === 0) return;
+            
+            const userInput = document.getElementById('spelling-input').value.toLowerCase().trim();
+            const correctWord = wordList[currentSpellingIndex].word.toLowerCase();
+            const resultDiv = document.getElementById('spelling-result');
+            
+            totalAttempts++;
+            
+            if (userInput === correctWord) {
+                correctAnswers++;
+                resultDiv.textContent = `🎉 太棒了！正确答案是: ${wordList[currentSpellingIndex].word}`;
+                resultDiv.className = 'result-message correct';
+                
+                // 添加星星动画
+                setTimeout(() => {
+                    resultDiv.innerHTML = `<span class="star-animation">⭐</span> 太棒了！正确答案是: ${wordList[currentSpellingIndex].word} <span class="star-animation">⭐</span>`;
+                }, 100);
+            } else {
+                resultDiv.textContent = `😊 再试试看！正确答案是: ${wordList[currentSpellingIndex].word}`;
+                resultDiv.className = 'result-message incorrect';
+            }
+            
+            resultDiv.classList.remove('hidden');
+            updateProgress();
+        }
+
+        function nextSpellingWord() {
+            const wordList = getWordList();
+            if (wordList.length === 0) return;
+            
+            currentSpellingIndex = (currentSpellingIndex + 1) % wordList.length;
+            displaySpellingWord();
+            updateProgress();
+        }
+
+        // 更新进度条
+        function updateProgress() {
+            const wordList = getWordList();
+            if (wordList.length === 0) return;
+            
+            let current, total;
+            
+            if (currentMode === 'review') {
+                current = currentWordIndex + 1;
+                total = wordList.length;
+            } else {
+                current = correctAnswers;
+                total = totalAttempts || 1;
+            }
+            
+            const percentage = (current / total) * 100;
+            document.getElementById('progress-fill').style.width = percentage + '%';
+            
+            if (currentMode === 'review') {
+                document.getElementById('progress-text').textContent = `${current} / ${total}`;
+            } else {
+                document.getElementById('progress-text').textContent = `正确: ${correctAnswers} / ${totalAttempts}`;
+            }
+        }
+
+        // 键盘事件
+        document.getElementById('spelling-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkSpelling();
+            }
+        });
+
+        // 初始化应用
+        function initializeApp() {
+            initializeWords();
+            updateDayDisplay();
+            resetReviewMode();
+            updateProgress();
+        }
+
+        // 页面加载完成后初始化
+        window.addEventListener('load', initializeApp);
+    </script>
+</body>
+</html>
