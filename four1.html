@@ -1,0 +1,2351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>沪教版英语 4A 听读复习 · Ivory Atlas</title>
+
+  <!-- Fonts: Inter & Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ivory: {
+              50: '#FAF8F5',
+              100: '#F3EFE8',
+              200: '#E7E0D5',
+              300: '#D5CBB9',
+            },
+            ink: {
+              900: '#2C2A29',
+              700: '#4A4643',
+              500: '#756F6A',
+              400: '#9B948E',
+            },
+            terracotta: {
+              50: '#FDF4F0',
+              100: '#F9E3DA',
+              200: '#F2C9B8',
+              500: '#C86D51',
+              600: '#B55B40',
+              700: '#94462F',
+            },
+            indigoAtlas: {
+              50: '#F0F4F8',
+              100: '#DCE6F0',
+              200: '#BDD0E4',
+              500: '#4F709C',
+              600: '#3D5A80',
+              700: '#2E4563',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', '"PingFang SC"', '"Hiragino Sans GB"', '"Microsoft YaHei"', 'sans-serif'],
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+          },
+          boxShadow: {
+            'paper': '0 4px 18px -2px rgba(44, 42, 41, 0.06), 0 1px 4px -1px rgba(44, 42, 41, 0.04)',
+            'paper-lg': '0 14px 34px -6px rgba(44, 42, 41, 0.10), 0 4px 10px -2px rgba(44, 42, 41, 0.04)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* 3D Flashcard Flip */
+    .perspective-1200 { perspective: 1200px; }
+    .preserve-3d {
+      transform-style: preserve-3d;
+      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .backface-hidden {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .rotate-y-180 { transform: rotateY(180deg); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-up { animation: fadeUp 0.24s ease-out forwards; }
+
+    /* Soft Playing Pulse Animation for Active Audio Buttons */
+    @keyframes audioPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(61, 90, 128, 0.38); }
+      50% { box-shadow: 0 0 0 6px rgba(61, 90, 128, 0); }
+    }
+    .is-speaking {
+      background-color: #3D5A80 !important;
+      color: #FFFFFF !important;
+      border-color: #3D5A80 !important;
+      animation: audioPulse 1.25s ease-in-out infinite;
+    }
+
+    /* Hide scrollbar for mobile horizontal unit tabs */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Custom subtle scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #FAF8F5; }
+    ::-webkit-scrollbar-thumb { background: #D5CBB9; border-radius: 9999px; }
+  </style>
+</head>
+
+<body class="bg-ivory-50 text-ink-900 font-sans min-h-screen flex flex-col selection:bg-terracotta-100 selection:text-terracotta-700">
+
+  <!-- ==================== TOP STICKY HEADER ==================== -->
+  <header class="sticky top-0 z-30 bg-ivory-50/95 backdrop-blur-md border-b border-ivory-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <!-- Brand & Badge -->
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-indigoAtlas-600 text-white flex items-center justify-center shadow-sm shrink-0 font-serif font-bold text-lg">
+            4A
+          </div>
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <h1 class="text-base sm:text-lg font-bold tracking-tight text-ink-900">
+                沪教版英语 4A 听读复习
+              </h1>
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-terracotta-50 text-terracotta-700 border border-terracotta-100">
+                🇬🇧 自然英音 · 每天10-15分钟
+              </span>
+            </div>
+            <p class="text-[11px] sm:text-xs text-ink-500 mt-0.5">上海教育出版社 五四学制 四年级上册（2024课标修订）</p>
+          </div>
+        </div>
+
+        <!-- Right Controls: Voice Selector + Preview, Speed, Timer, Mistake Book -->
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- Natural Voice Selector + Preview Button -->
+          <div class="inline-flex items-center gap-1 bg-white border border-ivory-200 rounded-xl p-1 shadow-sm max-w-full">
+            <select id="voiceSelect" onchange="onVoiceChange(this.value)" title="选择英式发音音色"
+              class="bg-transparent text-xs font-semibold text-ink-800 pl-2 pr-1 py-1 rounded-lg focus:outline-none max-w-[160px] sm:max-w-[200px] truncate cursor-pointer">
+              <option value="online-gb">✨ 高清在线英音（推荐）</option>
+            </select>
+            <button type="button" onclick="previewSelectedVoice(this)" title="试听当前音色"
+              class="px-2.5 py-1 rounded-lg bg-indigoAtlas-50 hover:bg-indigoAtlas-100 text-indigoAtlas-700 text-xs font-bold transition shrink-0">
+              🔊 试听
+            </button>
+          </div>
+
+          <!-- Speech Rate Toggle -->
+          <div class="inline-flex items-center bg-ivory-100 p-1 rounded-xl border border-ivory-200" title="朗读语速切换（慢速保持自然音调）">
+            <button id="rateNormalBtn" onclick="setSpeedMode('normal')" class="px-2.5 py-1 rounded-lg text-xs font-semibold transition">正常</button>
+            <button id="rateSlowBtn" onclick="setSpeedMode('slow')" class="px-2.5 py-1 rounded-lg text-xs font-semibold transition">慢速</button>
+          </div>
+
+          <!-- 15-Minute Daily Timer -->
+          <div class="inline-flex items-center gap-1.5 bg-white border border-ivory-200 rounded-xl px-2.5 py-1 shadow-sm">
+            <span class="text-xs text-ink-500 hidden sm:inline">⏱</span>
+            <span id="timerDisplay" class="font-mono text-xs sm:text-sm font-bold text-ink-900 w-11 text-center">15:00</span>
+            <button id="timerToggleBtn" onclick="toggleTimer()" class="px-2 py-1 rounded-lg bg-indigoAtlas-50 hover:bg-indigoAtlas-100 text-indigoAtlas-700 text-xs font-semibold transition">
+              开始
+            </button>
+            <button onclick="resetTimer()" title="重置为15分钟" class="p-1 rounded-lg hover:bg-ivory-100 text-ink-500 hover:text-ink-900 transition">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            </button>
+          </div>
+
+          <!-- Mistake Book Entry -->
+          <button onclick="selectUnit('__MISTAKES__')" id="headerMistakeBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-terracotta-50 hover:bg-terracotta-100 text-terracotta-700 border border-terracotta-200 text-xs sm:text-sm font-semibold transition shadow-sm">
+            <span>错题本</span>
+            <span id="headerMistakeBadge" class="px-1.5 py-0.5 rounded-full bg-terracotta-500 text-white text-[11px] leading-none font-bold">0</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Overall Mastery Progress Bar -->
+      <div class="mt-2.5 pt-2.5 border-t border-ivory-200/70 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-4 text-xs text-ink-500">
+          <span>全册词汇掌握：<strong id="globalMasteredCount" class="text-indigoAtlas-700">0</strong> / <span id="globalTotalWords">0</span></span>
+          <span class="hidden sm:inline">听读打卡：<strong id="globalChecklistDone" class="text-emerald-700">0</strong> / <span id="globalChecklistTotal">0</span></span>
+        </div>
+        <div class="flex items-center gap-2.5 flex-1 max-w-xs">
+          <div class="w-full h-2 bg-ivory-200 rounded-full overflow-hidden">
+            <div id="globalProgressBar" class="h-full bg-gradient-to-r from-indigoAtlas-600 to-terracotta-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+          <span id="globalProgressPct" class="text-xs font-bold text-ink-700 w-9 text-right">0%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Horizontal Scroll Unit Nav -->
+    <div class="lg:hidden border-t border-ivory-200/80 bg-white/85">
+      <div id="mobileUnitNav" class="flex items-center gap-2 overflow-x-auto no-scrollbar px-4 py-2.5"></div>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN LAYOUT (SIDEBAR + WORKSPACE) ==================== -->
+  <div class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-5 flex gap-6 items-start">
+
+    <!-- Desktop Left Sidebar -->
+    <aside class="hidden lg:block w-64 shrink-0 sticky top-[132px] max-h-[calc(100vh-152px)] overflow-y-auto pr-1">
+      <div class="bg-white rounded-3xl border border-ivory-200 shadow-paper p-3">
+        <div class="px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-ink-400">
+          单元目录 · Units
+        </div>
+        <nav id="desktopUnitNav" class="space-y-1"></nav>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="flex-1 min-w-0">
+
+      <!-- SPECIAL PRACTICE BANNER (for Mistakes / Core Phrases / All Book) -->
+      <div id="specialPracticeBanner" class="hidden mb-4 bg-terracotta-50 border border-terracotta-200 rounded-2xl px-4 py-3 flex flex-wrap items-center justify-between gap-2 animate-fade-up">
+        <div class="text-xs sm:text-sm font-semibold text-terracotta-700" id="specialPracticeLabel">
+          正在进行专项复习
+        </div>
+        <button onclick="exitSpecialPractice()" class="px-3 py-1 rounded-lg bg-white border border-terracotta-200 text-xs font-bold text-terracotta-700 hover:bg-terracotta-100 transition">
+          退出专项模式
+        </button>
+      </div>
+
+      <!-- ==================== REGULAR UNIT VIEW ==================== -->
+      <div id="unitWorkspace" class="space-y-5">
+        <!-- Unit Title Card -->
+        <div class="bg-white rounded-3xl border border-ivory-200 shadow-paper p-5 sm:p-6">
+          <div class="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <div class="flex flex-wrap items-center gap-2 mb-1.5">
+                <span id="unitPageBadge" class="px-2.5 py-0.5 rounded-lg bg-indigoAtlas-50 text-indigoAtlas-700 text-xs font-semibold">约第 2–6 页</span>
+                <span id="unitProgressBadge" class="px-2.5 py-0.5 rounded-lg bg-ivory-100 text-ink-600 text-xs font-medium">已掌握 0 / 0</span>
+              </div>
+              <h2 id="unitTitle" class="text-xl sm:text-2xl font-bold text-ink-900">Starter 开学准备</h2>
+              <p id="unitTaskSubtitle" class="text-sm text-ink-500 mt-1"></p>
+            </div>
+          </div>
+
+          <!-- 4 Functional Tabs -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-ivory-100 p-1.5 rounded-2xl border border-ivory-200 mt-5" role="tablist">
+            <button id="utab-flashcard" onclick="switchUnitTab('flashcard')" class="unit-tab-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center justify-center gap-1.5">
+              <span>🃏</span> 闪卡背词
+            </button>
+            <button id="utab-guide" onclick="switchUnitTab('guide')" class="unit-tab-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center justify-center gap-1.5">
+              <span>📖</span> 句型与要点
+            </button>
+            <button id="utab-quiz" onclick="switchUnitTab('quiz')" class="unit-tab-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center justify-center gap-1.5">
+              <span>🎯</span> 趣玩测验
+            </button>
+            <button id="utab-checklist" onclick="switchUnitTab('checklist')" class="unit-tab-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center justify-center gap-1.5">
+              <span>✅</span> 听读打卡
+            </button>
+          </div>
+        </div>
+
+        <!-- TAB 1: FLASHCARDS -->
+        <section id="uview-flashcard" class="unit-panel animate-fade-up">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+            <div class="flex items-center gap-2">
+              <span id="fcCounter" class="text-sm font-bold text-ink-700 bg-white border border-ivory-200 px-3.5 py-1.5 rounded-xl shadow-sm">1 / 12</span>
+              <span id="fcStatusTag" class="hidden text-xs font-semibold px-2.5 py-1 rounded-lg"></span>
+            </div>
+            <div class="flex items-center gap-2">
+              <label class="inline-flex items-center gap-2 text-xs sm:text-sm text-ink-700 bg-white border border-ivory-200 px-3 py-1.5 rounded-xl cursor-pointer select-none shadow-sm">
+                <input id="autoSpeakCheck" type="checkbox" onchange="toggleAutoSpeak(this.checked)" class="rounded text-indigoAtlas-600 focus:ring-indigoAtlas-600" />
+                <span>切卡自动朗读</span>
+              </label>
+              <button onclick="shuffleFlashcards()" class="px-3 py-1.5 rounded-xl bg-white border border-ivory-200 hover:border-indigoAtlas-600 text-xs sm:text-sm font-medium text-ink-700 hover:text-indigoAtlas-700 shadow-sm transition">
+                🔀 打乱顺序
+              </button>
+            </div>
+          </div>
+
+          <!-- 3D Flip Card -->
+          <div class="perspective-1200 w-full max-w-2xl mx-auto">
+            <div id="fcCardInner" onclick="flipFlashcard()" class="preserve-3d relative w-full min-h-[330px] sm:min-h-[360px] cursor-pointer select-none">
+              <!-- Front -->
+              <div class="backface-hidden absolute inset-0 bg-white rounded-3xl border border-ivory-200 shadow-paper-lg p-6 sm:p-10 flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-full text-xs font-semibold bg-indigoAtlas-50 text-indigoAtlas-700">正面 · 英文</span>
+                  <span class="text-xs text-ink-400">点击卡片翻转</span>
+                </div>
+
+                <div class="text-center my-auto py-4">
+                  <h3 id="fcFrontWord" class="font-serif text-3xl sm:text-4xl font-bold text-ink-900 leading-snug break-words mb-2">school building</h3>
+                  <p id="fcFrontHint" class="text-xs sm:text-sm text-ink-500 font-medium mb-5"></p>
+                  <button type="button" id="fcFrontSpeakBtn" onclick="event.stopPropagation(); speakCurrentCard(false, this)" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-indigoAtlas-50 hover:bg-indigoAtlas-100 text-indigoAtlas-700 border border-indigoAtlas-100 text-sm font-semibold transition shadow-sm active:scale-95">
+                    <span>🔊</span> 自然英音朗读
+                  </button>
+                </div>
+
+                <div class="text-center text-xs text-ink-400">
+                  电脑端可用 <kbd class="px-1.5 py-0.5 rounded bg-ivory-100 border border-ivory-200 text-ink-700 font-mono">空格</kbd> 翻转，<kbd class="px-1.5 py-0.5 rounded bg-ivory-100 border border-ivory-200 text-ink-700 font-mono">←</kbd> <kbd class="px-1.5 py-0.5 rounded bg-ivory-100 border border-ivory-200 text-ink-700 font-mono">→</kbd> 切换
+                </div>
+              </div>
+
+              <!-- Back -->
+              <div class="backface-hidden rotate-y-180 absolute inset-0 bg-white rounded-3xl border-2 border-indigoAtlas-100 shadow-paper-lg p-6 sm:p-9 flex flex-col justify-between overflow-y-auto">
+                <div class="flex items-center justify-between border-b border-ivory-100 pb-3">
+                  <div>
+                    <span id="fcBackWord" class="font-serif text-xl font-bold text-ink-900">school building</span>
+                    <span id="fcBackHint" class="ml-2 text-xs text-ink-500"></span>
+                  </div>
+                  <button type="button" onclick="event.stopPropagation(); speakCurrentCard(false, this)" class="px-3 py-1.5 rounded-full bg-ivory-100 hover:bg-indigoAtlas-50 text-ink-700 text-xs font-semibold transition shrink-0">
+                    🔊 读词
+                  </button>
+                </div>
+
+                <div class="my-auto py-4 space-y-4">
+                  <div>
+                    <div class="text-xs font-semibold text-ink-400 mb-1">中文释义</div>
+                    <p id="fcBackMeaning" class="text-2xl sm:text-3xl font-bold text-ink-900 leading-snug">教学楼</p>
+                  </div>
+
+                  <div class="bg-ivory-50 rounded-2xl p-4 border border-ivory-200">
+                    <div class="flex items-center justify-between mb-1.5 gap-2">
+                      <span class="text-xs font-bold text-terracotta-600">课本例句 / 搭配</span>
+                      <button id="fcSpeakExBtn" type="button" onclick="event.stopPropagation(); speakCurrentCard(true, this)" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-ivory-200 hover:border-indigoAtlas-600 text-indigoAtlas-700 text-xs font-semibold transition shrink-0">
+                        🔊 朗读例句
+                      </button>
+                    </div>
+                    <p id="fcBackExample" class="text-sm sm:text-base text-ink-800 font-medium leading-relaxed"></p>
+                  </div>
+                </div>
+
+                <div class="text-center text-xs text-ink-400">点击卡片返回正面</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Flashcard Action Buttons -->
+          <div class="max-w-2xl mx-auto mt-5 space-y-3">
+            <div class="grid grid-cols-2 gap-3">
+              <button onclick="markCurrentCard(false)" class="py-3.5 px-4 rounded-2xl bg-terracotta-50 hover:bg-terracotta-100 text-terracotta-700 border border-terracotta-200 font-bold text-sm sm:text-base transition active:scale-[0.98]">
+                😅 再练练（加入错题本）
+              </button>
+              <button onclick="markCurrentCard(true)" class="py-3.5 px-4 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm font-bold text-sm sm:text-base transition active:scale-[0.98]">
+                🎉 已掌握
+              </button>
+            </div>
+            <div class="flex items-center justify-between gap-3">
+              <button onclick="prevFlashcard()" class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-white border border-ivory-200 hover:border-ink-400 text-ink-700 text-sm font-semibold shadow-sm transition">
+                ← 上一个
+              </button>
+              <button onclick="flipFlashcard()" class="px-5 py-2.5 rounded-xl bg-ivory-100 hover:bg-ivory-200 text-ink-700 text-sm font-semibold transition">
+                翻转卡片
+              </button>
+              <button onclick="nextFlashcard()" class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-white border border-ivory-200 hover:border-ink-400 text-ink-700 text-sm font-semibold shadow-sm transition">
+                下一个 →
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 2: SENTENCES & GUIDE -->
+        <section id="uview-guide" class="unit-panel hidden space-y-5 animate-fade-up">
+          <!-- Task & Phonics Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white rounded-3xl border border-ivory-200 shadow-paper p-5">
+              <div class="text-xs font-bold text-indigoAtlas-600 uppercase tracking-wider mb-1.5">🎯 单元任务</div>
+              <p id="guideTask" class="text-sm sm:text-base font-semibold text-ink-900 leading-relaxed"></p>
+            </div>
+            <div class="bg-white rounded-3xl border border-ivory-200 shadow-paper p-5">
+              <div class="text-xs font-bold text-terracotta-600 uppercase tracking-wider mb-1.5">🔤 语音点 / 课本提示</div>
+              <p id="guidePhonics" class="text-sm sm:text-base text-ink-800 leading-relaxed"></p>
+            </div>
+          </div>
+
+          <!-- Key Sentences -->
+          <div class="bg-white rounded-3xl border border-ivory-200 shadow-paper p-5 sm:p-6">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+              <h3 class="text-base sm:text-lg font-bold text-ink-900">💬 重点句型（点击喇叭自然跟读）</h3>
+              <span class="text-xs text-ink-400">支持并列句分段连播 · 再次点击可停止</span>
+            </div>
+            <div id="guideSentencesList" class="space-y-3"></div>
+          </div>
+
+          <!-- Text Highlights -->
+          <div class="bg-white rounded-3xl border border-ivory-200 shadow-paper p-5 sm:p-6">
+            <h3 class="text-base sm:text-lg font-bold text-ink-900 mb-3">📚 课文要点</h3>
+            <ul id="guideHighlightsList" class="space-y-2.5 text-sm sm:text-base text-ink-700 leading-relaxed"></ul>
+          </div>
+        </section>
+
+        <!-- TAB 3: QUIZ & SPELLING -->
+        <section id="uview-quiz" class="unit-panel hidden animate-fade-up">
+          <!-- Sub-mode switcher -->
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+            <div class="inline-flex bg-white p-1 rounded-2xl border border-ivory-200 shadow-sm">
+              <button id="qmode-choice" onclick="setQuizSubMode('choice')" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition">模式 A：选择题</button>
+              <button id="qmode-spelling" onclick="setQuizSubMode('spelling')" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition">模式 B：听音拼写</button>
+            </div>
+
+            <!-- Choice Direction Toggle (visible in choice mode) -->
+            <div id="choiceDirWrap" class="inline-flex bg-ivory-100 p-1 rounded-xl border border-ivory-200">
+              <button id="qdir-encn" onclick="setChoiceDir('en-cn')" class="px-3 py-1 rounded-lg text-xs font-semibold transition">看英选义</button>
+              <button id="qdir-cnen" onclick="setChoiceDir('cn-en')" class="px-3 py-1 rounded-lg text-xs font-semibold transition">看义选英</button>
+            </div>
+          </div>
+
+          <!-- SUB-MODE A: MULTIPLE CHOICE -->
+          <div id="quizChoiceBox" class="max-w-2xl mx-auto bg-white rounded-3xl border border-ivory-200 shadow-paper-lg p-6 sm:p-8">
+            <div class="flex items-center justify-between mb-4">
+              <span id="choiceStats" class="text-xs font-semibold px-3 py-1 rounded-lg bg-ivory-100 text-ink-600">连对 0 题 · 正确率 0%</span>
+              <button id="choiceAudioBtn" onclick="speakChoiceTarget(this)" class="px-3.5 py-1.5 rounded-full bg-indigoAtlas-50 hover:bg-indigoAtlas-100 text-indigoAtlas-700 text-xs font-semibold transition">
+                🔊 听英音
+              </button>
+            </div>
+
+            <div class="text-center py-5 border-b border-ivory-100 mb-6">
+              <p id="choicePromptLabel" class="text-xs font-semibold text-indigoAtlas-600 mb-2">选择正确的中文意思</p>
+              <h3 id="choicePromptText" class="text-2xl sm:text-3xl font-bold text-ink-900 break-words"></h3>
+            </div>
+
+            <div id="choiceOptions" class="grid grid-cols-1 gap-3"></div>
+
+            <div id="choiceFeedback" class="hidden mt-5 pt-4 border-t border-ivory-200 animate-fade-up">
+              <p id="choiceFeedbackTitle" class="text-sm font-bold mb-2"></p>
+              <div class="bg-ivory-50 rounded-2xl p-3.5 border border-ivory-200 text-sm text-ink-700">
+                <div class="font-bold text-ink-900" id="choiceExpLine"></div>
+                <div class="text-xs text-ink-500 mt-1" id="choiceExpTip"></div>
+              </div>
+              <div class="mt-4 flex justify-end">
+                <button onclick="nextChoiceQuestion()" class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-indigoAtlas-600 hover:bg-indigoAtlas-700 text-white text-sm font-bold transition">
+                  下一题 →
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUB-MODE B: LISTENING & SPELLING -->
+          <div id="quizSpellingBox" class="hidden max-w-2xl mx-auto bg-white rounded-3xl border border-ivory-200 shadow-paper-lg p-6 sm:p-8">
+            <div class="flex items-center justify-between mb-4">
+              <span id="spellStats" class="text-xs font-semibold px-3 py-1 rounded-lg bg-ivory-100 text-ink-600">连对 0 题 · 正确率 0%</span>
+              <span class="text-xs text-ink-400">严格校验英式拼写</span>
+            </div>
+
+            <div class="text-center py-3 mb-5">
+              <div class="flex items-center justify-center gap-2 mb-4">
+                <button type="button" onclick="speakSpellTarget(false, this)" class="px-5 py-2.5 rounded-full bg-indigoAtlas-50 hover:bg-indigoAtlas-100 text-indigoAtlas-700 text-sm font-bold transition">
+                  🔊 听自然英音
+                </button>
+                <button type="button" onclick="speakSpellTarget(true, this)" class="px-3.5 py-2.5 rounded-full bg-ivory-100 hover:bg-ivory-200 text-ink-700 text-xs font-semibold transition">
+                  🐢 慢速跟读
+                </button>
+              </div>
+              <h3 id="spellMeaningPrompt" class="text-xl sm:text-2xl font-bold text-ink-900"></h3>
+              <p id="spellHintLetters" class="mt-3 font-mono text-lg tracking-[0.2em] text-indigoAtlas-600 font-bold min-h-[28px]"></p>
+            </div>
+
+            <form onsubmit="submitSpelling(event)" class="space-y-4">
+              <input id="spellInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+                placeholder="输入对应的英文单词或短语..."
+                class="w-full text-center text-lg sm:text-xl font-mono font-bold px-4 py-4 rounded-2xl bg-ivory-50 border-2 border-ivory-200 focus:bg-white focus:border-indigoAtlas-600 focus:outline-none transition" />
+
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                  <button type="button" onclick="hintOneLetter()" class="px-3.5 py-2.5 rounded-xl bg-ivory-100 hover:bg-ivory-200 text-ink-700 text-xs sm:text-sm font-semibold transition">
+                    💡 提示一个字母
+                  </button>
+                  <button type="button" onclick="showSpellAnswer()" class="px-3.5 py-2.5 rounded-xl bg-terracotta-50 hover:bg-terracotta-100 text-terracotta-700 text-xs sm:text-sm font-semibold transition">
+                    看答案
+                  </button>
+                </div>
+                <button id="spellSubmitBtn" type="submit" class="px-6 py-2.5 rounded-xl bg-indigoAtlas-600 hover:bg-indigoAtlas-700 text-white text-sm font-bold transition">
+                  检查拼写
+                </button>
+              </div>
+            </form>
+
+            <div id="spellFeedback" class="hidden mt-5 pt-4 border-t border-ivory-200 animate-fade-up">
+              <p id="spellFeedbackTitle" class="text-sm font-bold mb-2"></p>
+              <div class="bg-ivory-50 rounded-2xl p-3.5 border border-ivory-200">
+                <div class="font-serif text-xl font-bold text-ink-900" id="spellCorrectDisplay"></div>
+                <p class="text-xs sm:text-sm text-ink-600 mt-1" id="spellExampleDisplay"></p>
+              </div>
+              <div class="mt-4 flex justify-end">
+                <button type="button" onclick="nextSpellQuestion()" class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-terracotta-500 hover:bg-terracotta-600 text-white text-sm font-bold transition">
+                  下一个听写 →
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 4: CHECKLIST -->
+        <section id="uview-checklist" class="unit-panel hidden animate-fade-up">
+          <div class="bg-white rounded-3xl border border-ivory-200 shadow-paper p-5 sm:p-7">
+            <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-ivory-200">
+              <div>
+                <h3 class="text-base sm:text-lg font-bold text-ink-900">✅ 听读打卡清单</h3>
+                <p class="text-xs sm:text-sm text-ink-500 mt-0.5">每天选 1–2 项陪孩子听读，完成后打勾自动保存在本地</p>
+              </div>
+              <span id="unitChecklistProgress" class="px-3.5 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs sm:text-sm font-bold">
+                已完成 0 / 0
+              </span>
+            </div>
+
+            <div id="unitChecklistItems" class="divide-y divide-ivory-100 mt-2"></div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ==================== FULL-BOOK REVIEW VIEW ==================== -->
+      <div id="reviewWorkspace" class="hidden space-y-6 animate-fade-up">
+        <div class="bg-white rounded-3xl border border-ivory-200 shadow-paper p-6">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <span class="px-2.5 py-0.5 rounded-lg bg-terracotta-50 text-terracotta-700 text-xs font-bold">期末与日常总复习</span>
+              <h2 class="text-xl sm:text-2xl font-bold text-ink-900 mt-1.5">全册核心复习总览</h2>
+              <p class="text-sm text-ink-500 mt-1">按“听—跟读—说”走：先稳住 6 组必稳短语，再对照书末 Words to use（约第 87–89 页）查漏补缺。</p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="startSpecialPractice('core-phrases', 'flashcard')" class="px-4 py-2.5 rounded-xl bg-indigoAtlas-600 hover:bg-indigoAtlas-700 text-white text-xs sm:text-sm font-bold shadow-sm transition">
+                🃏 核心短语闪卡
+              </button>
+              <button onclick="startSpecialPractice('all-book', 'quiz')" class="px-4 py-2.5 rounded-xl bg-terracotta-500 hover:bg-terracotta-600 text-white text-xs sm:text-sm font-bold shadow-sm transition">
+                🎯 全册综合测验
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6 Core Phrase Groups -->
+        <div class="bg-white rounded-3xl border border-ivory-200 shadow-paper p-5 sm:p-6">
+          <h3 class="text-base sm:text-lg font-bold text-ink-900 mb-4">⭐ 建议先稳住的 6 组必稳短语（点击自然英音连播）</h3>
+          <div id="corePhrasesGrid" class="grid grid-cols-1 md:grid-cols-2 gap-3.5"></div>
+        </div>
+
+        <!-- Full Book Overview Table -->
+        <div class="bg-white rounded-3xl border border-ivory-200 shadow-paper p-5 sm:p-6 overflow-hidden">
+          <h3 class="text-base sm:text-lg font-bold text-ink-900 mb-4">📋 全册 11 个单元任务与口语目标（点击行可跳转复习）</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-sm">
+              <thead>
+                <tr class="border-b border-ivory-200 text-xs text-ink-500 bg-ivory-50">
+                  <th class="py-3 px-3 rounded-tl-xl font-bold">单元</th>
+                  <th class="py-3 px-3 font-bold">单元任务</th>
+                  <th class="py-3 px-3 rounded-tr-xl font-bold">孩子最后能说</th>
+                </tr>
+              </thead>
+              <tbody id="fullBookTableBody" class="divide-y divide-ivory-100"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== MISTAKE BOOK VIEW ==================== -->
+      <div id="mistakeWorkspace" class="hidden space-y-5 animate-fade-up">
+        <div class="bg-white rounded-3xl border border-ivory-200 shadow-paper p-6">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h2 class="text-xl sm:text-2xl font-bold text-ink-900">📌 错题本 · 重点巩固</h2>
+              <p class="text-sm text-ink-500 mt-1">闪卡里点过“再练练”或测验/拼写答错的词条会自动收录在这里。</p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button id="btnMistakeFlashcard" onclick="startSpecialPractice('mistakes', 'flashcard')" class="px-4 py-2 rounded-xl bg-indigoAtlas-600 hover:bg-indigoAtlas-700 text-white text-xs sm:text-sm font-bold transition">
+                🃏 错题闪卡复习
+              </button>
+              <button id="btnMistakeQuiz" onclick="startSpecialPractice('mistakes', 'quiz')" class="px-4 py-2 rounded-xl bg-terracotta-500 hover:bg-terracotta-600 text-white text-xs sm:text-sm font-bold transition">
+                🎯 错题专项测验
+              </button>
+              <button id="btnMistakeClear" onclick="askClearMistakes()" class="px-3.5 py-2 rounded-xl bg-ivory-100 hover:bg-red-50 text-ink-600 hover:text-red-600 text-xs sm:text-sm font-semibold transition">
+                清空错题
+              </button>
+            </div>
+          </div>
+
+          <div id="mistakeEmptyBox" class="hidden py-14 text-center">
+            <div class="text-4xl mb-2">🌟</div>
+            <h3 class="text-base font-bold text-ink-900">太棒了，错题本目前是空的！</h3>
+            <p class="text-sm text-ink-500 mt-1">每天坚持 10–15 分钟，轻松掌握四年级上册全部要点。</p>
+          </div>
+
+          <div id="mistakeItemsList" class="divide-y divide-ivory-100 mt-4"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="mt-auto py-5 border-t border-ivory-200 text-center text-xs text-ink-400 px-4">
+    沪教版五四学制《英语》四年级上册（2024年课标修订）· 温馨提示：本工具只提炼要点，歌谣、对话和故事请配合纸质课本与原版录音听读。
+  </footer>
+
+  <!-- ==================== CUSTOM CONFIRM MODAL ==================== -->
+  <div id="confirmModal" class="hidden fixed inset-0 z-50 bg-ink-900/45 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl border border-ivory-200 shadow-paper-lg max-w-sm w-full p-6 animate-fade-up">
+      <h3 id="confirmTitle" class="text-base font-bold text-ink-900 mb-2">确认操作</h3>
+      <p id="confirmDesc" class="text-sm text-ink-600 mb-5 leading-relaxed"></p>
+      <div class="flex justify-end gap-2">
+        <button onclick="closeConfirm()" class="px-4 py-2 rounded-xl bg-ivory-100 hover:bg-ivory-200 text-ink-700 text-sm font-semibold transition">取消</button>
+        <button id="confirmOkBtn" class="px-4 py-2 rounded-xl bg-terracotta-500 hover:bg-terracotta-600 text-white text-sm font-bold transition">确认</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TOAST CONTAINER ==================== -->
+  <div id="toastBox" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-[60] pointer-events-none flex flex-col items-center gap-2"></div>
+
+  <!-- ==================== CURRICULUM DATA & APP LOGIC ==================== -->
+  <script>
+    /**
+     * =========================================================================
+     * 1. COMPLETE GRADE 4A CURRICULUM DATA (SHANGHAI 5-4 SYSTEM, 2024 EDITION)
+     *    Strictly British English spellings & Grade 4A vocabulary only.
+     * =========================================================================
+     */
+    const UNITS = [
+      {
+        id: 'starter',
+        shortTitle: 'Starter',
+        title: 'Starter 开学准备',
+        pages: '约第 2–6 页',
+        task: '熟悉课堂用语、学习方法，稳住 20–100 的数字和星期几',
+        canSay: '课堂用语、数字 20–100、星期几',
+        phonics: '主要人物：Shenshen（申申）、Yaoyao（瑶瑶）、Minmin（敏敏）、Xiaojiang（小江）、Xiaopu、James、Lily，以及老师 Miss Li。本册为英式英语：一楼 ground floor，二楼 first floor，三楼 second floor；英式拼写 favourite、neighbourhood、colour、colourful、grey、soya milk。',
+        words: [
+          { id: 'st-1', word: 'twenty', hint: 'num. /ˈtwenti/', meaning: '20', example: 'Count from twenty to thirty.' },
+          { id: 'st-2', word: 'twenty-one', hint: 'num.', meaning: '21', example: 'Twenty, twenty-one, twenty-two!' },
+          { id: 'st-3', word: 'twenty-five', hint: 'num.', meaning: '25', example: 'There are twenty-five desks in the classroom.' },
+          { id: 'st-4', word: 'thirty', hint: 'num. /ˈθɜːti/', meaning: '30', example: 'Thirty comes after twenty-nine.' },
+          { id: 'st-5', word: 'forty', hint: 'num. /ˈfɔːti/', meaning: '40（注意拼写没有 u）', example: 'Forty, fifty, sixty.' },
+          { id: 'st-6', word: 'fifty', hint: 'num. /ˈfɪfti/', meaning: '50', example: 'Fifty students are in the hall.' },
+          { id: 'st-7', word: 'sixty', hint: 'num. /ˈsɪksti/', meaning: '60', example: 'Sixty minutes make an hour.' },
+          { id: 'st-8', word: 'seventy', hint: 'num. /ˈsevnti/', meaning: '70', example: 'Seventy, eighty, ninety.' },
+          { id: 'st-9', word: 'eighty', hint: 'num. /ˈeɪti/', meaning: '80', example: 'My grandpa is eighty years old.' },
+          { id: 'st-10', word: 'ninety', hint: 'num. /ˈnaɪnti/', meaning: '90', example: 'Ninety plus ten is one hundred.' },
+          { id: 'st-11', word: 'one hundred', hint: 'num. /wʌn ˈhʌndrəd/', meaning: '100', example: 'I can count to one hundred!' },
+          { id: 'st-12', word: 'Monday', hint: 'n. /ˈmʌndeɪ/', meaning: '星期一', example: 'We go to school on Monday.' },
+          { id: 'st-13', word: 'Tuesday', hint: 'n. /ˈtjuːzdeɪ/', meaning: '星期二', example: 'We have art on Tuesday.' },
+          { id: 'st-14', word: 'Wednesday', hint: 'n. /ˈwenzdeɪ/', meaning: '星期三', example: 'Wednesday is in the middle of the week.' },
+          { id: 'st-15', word: 'Thursday', hint: 'n. /ˈθɜːzdeɪ/', meaning: '星期四', example: 'We play football on Thursday.' },
+          { id: 'st-16', word: 'Friday', hint: 'n. /ˈfraɪdeɪ/', meaning: '星期五', example: 'Friday is my favourite school day.' },
+          { id: 'st-17', word: 'Saturday', hint: 'n. /ˈsætədeɪ/', meaning: '星期六', example: 'I go to the park on Saturday.' },
+          { id: 'st-18', word: 'Sunday', hint: 'n. /ˈsʌndeɪ/', meaning: '星期日', example: 'We visit Grandma on Sunday.' },
+          { id: 'st-19', word: 'study plan', hint: 'n. 短语', meaning: '学习计划', example: "This is my plan for English study. It's a good plan." },
+          { id: 'st-20', word: 'partner', hint: 'n. /ˈpɑːtnə(r)/', meaning: '搭档，同伴', example: 'Read the story with your partner.' }
+        ],
+        sentences: [
+          'Please be quiet. / Keep quiet, please.',
+          'May I use your red pencil? Here you are.',
+          'Open your books, please. Read the story with your partner.',
+          'How do you spell book? B-O-O-K.',
+          "Don't be afraid. Have a try.",
+          "This is my plan for English study. Well done. It's a good plan."
+        ],
+        highlights: [
+          '熟悉老师常用的课堂指令与同伴合作表达，敢于开口试一试（Don\'t be afraid. Have a try.）。',
+          '稳住数字 20–30、整十数（40–90）到 100，以及星期一到星期日的顺读与打乱抽读。',
+          '牢记本册采用英式英语：ground floor（一楼）、first floor（二楼）、second floor（三楼）及 favourite、neighbourhood、colour、grey、soya milk。'
+        ],
+        checklist: [
+          '听·跟读｜Look, listen and repeat：课堂用语三段小对话。',
+          '听·跟读｜Study skills：练拼读、敢于试一试、讲自己的英语学习计划。',
+          '听·说｜Numbers：20–30 与整十数到 100，家长报数孩子用英语说出来。',
+          '听·说｜Days of the week：顺读星期一到星期日，再打乱顺序接龙。'
+        ]
+      },
+      {
+        id: 'unit1',
+        shortTitle: 'Unit 1',
+        title: 'Unit 1 My school',
+        pages: '约第 7–13 页',
+        task: 'Talking about my favourite place in the school（讲讲自己最喜欢的校园场所）',
+        canSay: 'I like the … I can … there.',
+        phonics: '字母 w 发 /w/，跟读课本 Sound 板块例词。',
+        words: [
+          { id: 'u1-1', word: 'school building', hint: 'n. 短语', meaning: '教学楼', example: 'Our school building is clean and bright.' },
+          { id: 'u1-2', word: 'library', hint: 'n. /ˈlaɪbrəri/', meaning: '图书馆', example: "Where is James? He's in the library." },
+          { id: 'u1-3', word: 'classroom', hint: 'n. /ˈklɑːsruːm/', meaning: '教室', example: 'Shall we meet in the classroom?' },
+          { id: 'u1-4', word: 'hall', hint: 'n. /hɔːl/', meaning: '礼堂', example: 'We have a birthday party in the hall.' },
+          { id: 'u1-5', word: 'computer room', hint: 'n. 短语', meaning: '计算机机房', example: 'How about the computer room?' },
+          { id: 'u1-6', word: 'sports field', hint: 'n. 短语', meaning: '运动场', example: "He's on the sports field.（注意介词用 on）" },
+          { id: 'u1-7', word: 'art room', hint: 'n. 短语', meaning: '美术教室', example: 'I like painting in the art room.' },
+          { id: 'u1-8', word: 'keep tidy', hint: 'v. 短语', meaning: '保持整洁', example: 'We should keep our classroom tidy.' },
+          { id: 'u1-9', word: 'on the ground floor', hint: 'prep. 短语（英式）', meaning: '在一楼', example: 'The hall is on the ground floor.' },
+          { id: 'u1-10', word: 'on the first floor', hint: 'prep. 短语（英式）', meaning: '在二楼', example: 'Our classroom is on the first floor.' },
+          { id: 'u1-11', word: 'on the second floor', hint: 'prep. 短语（英式）', meaning: '在三楼', example: 'The library is on the second floor.' },
+          { id: 'u1-12', word: 'see you soon', hint: '交际用语', meaning: '回头见', example: 'Let\'s meet there. See you soon!' },
+          { id: 'u1-13', word: 'bamboo', hint: 'n. /ˌbæmˈbuː/', meaning: '竹子', example: 'The school is made of bamboo.' }
+        ],
+        sentences: [
+          'What place do you like in our school? I like the sports field.',
+          "Where is James? He's in the library. / He's on the sports field.",
+          'Shall we meet in the classroom? How about the computer room?',
+          "The classroom has no computers. = The classroom doesn't have any computers."
+        ],
+        highlights: [
+          'Rhyme time《I like my school》：歌谣记到教室、运动场、礼堂和图书馆，说出对学校的喜爱。',
+          'Talking time《Let\'s meet there》：小组做校史课题，在图书馆、运动场和机房之间寻人、约见面地点。',
+          'Reading time《A bamboo school》：短文介绍一所全用竹子建造的特色学校（be made of bamboo）。'
+        ],
+        checklist: [
+          '听·跟读｜Topic words：分清 in the library 和 on the sports field。',
+          '听·跟读｜Rhyme time 跟读，能说 I like the sports field / library / classroom.',
+          '分角色｜Talking time：练 Shall we meet …? 和 How about …?',
+          '朗读｜A bamboo school：能说清这所学校的楼是竹子建的。',
+          '能说｜单元任务：说自己最喜欢的校园场所及原因（如 I can play basketball there.）。'
+        ]
+      },
+      {
+        id: 'unit2',
+        shortTitle: 'Unit 2',
+        title: 'Unit 2 My classmates',
+        pages: '约第 15–21 页',
+        task: 'Playing a guessing game（玩猜人游戏，用形容词描写同学）',
+        canSay: 'He / She is … He / She is good at …',
+        phonics: '课本 Sound 板块例词 excited；跟读即可，音标细节以课本为准。',
+        words: [
+          { id: 'u2-1', word: 'helpful', hint: 'adj. /ˈhelpfl/', meaning: '乐于助人的', example: 'He is helpful. He always helps teachers.' },
+          { id: 'u2-2', word: 'interesting', hint: 'adj. /ˈɪntrəstɪŋ/', meaning: '有趣的', example: 'She tells interesting stories.' },
+          { id: 'u2-3', word: 'lovely', hint: 'adj. /ˈlʌvli/', meaning: '可爱的、令人愉快的', example: 'My classmates are lovely.' },
+          { id: 'u2-4', word: 'different', hint: 'adj. /ˈdɪfrənt/', meaning: '不同的', example: 'We are all different and great.' },
+          { id: 'u2-5', word: 'great', hint: 'adj. /ɡreɪt/', meaning: '极好的', example: 'You are great!' },
+          { id: 'u2-6', word: 'often', hint: 'adv. /ˈɒfn/', meaning: '经常', example: 'Yaoyao often helps James with his Chinese.' },
+          { id: 'u2-7', word: 'always', hint: 'adv. /ˈɔːlweɪz/', meaning: '总是', example: 'He always helps teachers.' },
+          { id: 'u2-8', word: 'be good at', hint: '短语', meaning: '擅长', example: 'Minmin is good at football.' },
+          { id: 'u2-9', word: 'writer', hint: 'n. /ˈraɪtə(r)/', meaning: '作家', example: 'Shenshen wants to be a writer.' },
+          { id: 'u2-10', word: 'painter', hint: 'n. /ˈpeɪntə(r)/', meaning: '画家', example: 'Xiaojiang wants to be a painter.' },
+          { id: 'u2-11', word: 'Take it easy.', hint: '鼓励用语', meaning: '放轻松。', example: 'Take it easy. You can do it.' },
+          { id: 'u2-12', word: 'Keep going.', hint: '鼓励用语', meaning: '继续加油。', example: 'Keep going! We are with you.' },
+          { id: 'u2-13', word: 'Let me try.', hint: '交际用语', meaning: '让我试试。', example: 'It looks fun. Let me try!' }
+        ],
+        sentences: [
+          'Who is he? He is helpful. He always helps teachers.',
+          'Shenshen wants to be a writer. Xiaojiang wants to be a painter.',
+          'Minmin is good at football. Xiaopu is good at basketball.',
+          'Yaoyao often helps James with his Chinese.',
+          'You can do it. Take it easy. Keep going.'
+        ],
+        highlights: [
+          'Rhyme time《My classmates》：介绍同学们各有特长、互相帮助又各不相同。',
+          'Talking time《Who is he?》：用外貌、爱好和品质给线索，猜猜说的是谁。',
+          'Story time《You can do it》：同学们鼓励 James 练跳长绳，他最终敢于尝试并跳过去。'
+        ],
+        checklist: [
+          '听·跟读｜Topic words 与 Rhyme time：用 helpful、interesting 等词描述真实同学。',
+          '听·勾选｜Listen and tick：听完能说清同学爱做什么、怎样帮忙。',
+          '说｜家庭猜人游戏 Who is he?：说三句描写让对方猜，再互换角色。',
+          '朗读｜You can do it：跟读鼓励语 You can do it. Take it easy. Keep going.'
+        ]
+      },
+      {
+        id: 'unit3',
+        shortTitle: 'Unit 3',
+        title: 'Unit 3 Animals and their homes',
+        pages: '约第 23–29 页',
+        task: 'Making an animal card（做一张动物卡片，介绍它的外貌和家乡）',
+        canSay: 'They are from … They like …',
+        phonics: '字母 v 发 /v/（例词：very, love, lovely, river）。',
+        words: [
+          { id: 'u3-1', word: 'panda', hint: 'n. /ˈpændə/', meaning: '大熊猫', example: 'Pandas are black and white.' },
+          { id: 'u3-2', word: 'monkey', hint: 'n. /ˈmʌŋki/', meaning: '猴子', example: 'I like monkeys. They live in Guizhou.' },
+          { id: 'u3-3', word: 'elephant', hint: 'n. /ˈelɪfənt/', meaning: '大象', example: 'Elephants live in Yunnan.' },
+          { id: 'u3-4', word: 'baby elephant', hint: 'n. 短语', meaning: '小象', example: 'The baby elephant is swimming in the river.' },
+          { id: 'u3-5', word: 'polar bear', hint: 'n. 短语', meaning: '北极熊', example: 'Polar bears live in the North Pole.' },
+          { id: 'u3-6', word: 'family', hint: 'n. /ˈfæməli/', meaning: '一家人', example: 'Look, the elephant family are playing in the river.' },
+          { id: 'u3-7', word: 'hometown', hint: 'n. /ˈhəʊmtaʊn/', meaning: '家乡', example: 'Sichuan is our hometown.' },
+          { id: 'u3-8', word: 'black', hint: 'adj. /blæk/', meaning: '黑色（的）', example: 'Pandas are black and white.' },
+          { id: 'u3-9', word: 'white', hint: 'adj. /waɪt/', meaning: '白色（的）', example: 'Polar bears look white.' },
+          { id: 'u3-10', word: 'grey', hint: 'adj. /ɡreɪ/（英式拼写）', meaning: '灰色（的）', example: 'Elephants are big and grey.' },
+          { id: 'u3-11', word: 'yellow', hint: 'adj. /ˈjeləʊ/', meaning: '黄色（的）', example: 'The sun is yellow.' },
+          { id: 'u3-12', word: 'trunk', hint: 'n. /trʌŋk/', meaning: '象鼻', example: 'The elephant has a long trunk.' },
+          { id: 'u3-13', word: 'tail', hint: 'n. /teɪl/', meaning: '尾巴', example: 'Monkeys have long tails.' },
+          { id: 'u3-14', word: 'kind', hint: 'adj. /kaɪnd/', meaning: '友善的', example: 'The elephant family are very kind.' },
+          { id: 'u3-15', word: 'the North Pole', hint: 'n. 专有名词', meaning: '北极', example: 'Polar bears live in the North Pole.' },
+          { id: 'u3-16', word: 'Sichuan', hint: 'n. 地名', meaning: '四川', example: 'Pandas are from Sichuan.' },
+          { id: 'u3-17', word: 'Guizhou', hint: 'n. 地名', meaning: '贵州', example: 'These monkeys live in Guizhou, China.' },
+          { id: 'u3-18', word: 'Yunnan', hint: 'n. 地名', meaning: '云南', example: 'Look at the elephants in Yunnan.' },
+          { id: 'u3-19', word: 'India', hint: 'n. /ˈɪndiə/', meaning: '印度', example: 'Some elephants live in India.' },
+          { id: 'u3-20', word: 'Africa', hint: 'n. /ˈæfrɪkə/', meaning: '非洲', example: 'Many animals live in Africa.' }
+        ],
+        sentences: [
+          'Where are you from? We are from Sichuan. Sichuan is our hometown.',
+          'Pandas are black and white. They are from Sichuan.',
+          'I like monkeys. They live in Guizhou, China.',
+          'Look, the elephant family are playing in the river.',
+          'Why do they live there? Because they like climbing trees.'
+        ],
+        highlights: [
+          'Chant time《Animals in China》：把动物和家乡连起来（四川大熊猫、贵州猴子、云南大象）。',
+          'Talking time《Elephants in Yunnan》：讲云南象群，练习正在进行时（is / are + 动词-ing）。',
+          'Reading time《Polar bears》：介绍北极熊的家园，提到冰雪正在融化。'
+        ],
+        checklist: [
+          '听·跟读｜Topic words 与 Chant time：说出动物的颜色、家乡和喜欢的环境。',
+          '分角色｜Elephants in Yunnan：看图用正在进行时说它们在做什么。',
+          '朗读｜Polar bears：回答北极熊住在哪里、为什么看起来是白色的、冰雪怎么了。',
+          '能说｜制作动物卡片：介绍名称、家乡、外貌和喜欢做什么。'
+        ]
+      },
+      {
+        id: 'unit4',
+        shortTitle: 'Unit 4',
+        title: 'Unit 4 Our birthday',
+        pages: '约第 31–37 页',
+        task: 'Plan for a group birthday party（为集体生日会做计划）',
+        canSay: "It's a tradition to …",
+        phonics: '字母 e 发 /iː/（例词：she, he, these）。',
+        words: [
+          { id: 'u4-1', word: 'invitation', hint: 'n. /ˌɪnvɪˈteɪʃn/', meaning: '邀请函', example: 'Here is a birthday invitation.' },
+          { id: 'u4-2', word: 'party', hint: 'n. /ˈpɑːti/', meaning: '聚会', example: 'We invite you to our birthday party.' },
+          { id: 'u4-3', word: 'activity', hint: 'n. /ækˈtɪvəti/', meaning: '活动', example: 'What activities do we have at the party?' },
+          { id: 'u4-4', word: 'share a cake', hint: 'v. 短语', meaning: '分享蛋糕', example: "Let's share a cake together." },
+          { id: 'u4-5', word: 'letter', hint: 'n. /ˈletə(r)/', meaning: '信', example: 'Please bring a letter to your child.' },
+          { id: 'u4-6', word: 'noodles', hint: 'n. /ˈnuːdlz/', meaning: '面条', example: 'I have a bowl of noodles on my birthday.' },
+          { id: 'u4-7', word: 'egg', hint: 'n. /eɡ/', meaning: '鸡蛋', example: 'There is an egg in the birthday noodles.' },
+          { id: 'u4-8', word: 'bring', hint: 'v. /brɪŋ/', meaning: '带来', example: 'Please bring a letter to your child.' },
+          { id: 'u4-9', word: 'tradition', hint: 'n. /trəˈdɪʃn/', meaning: '传统', example: "It's a tradition to read parents' letters." },
+          { id: 'u4-10', word: 'wish', hint: 'n. /wɪʃ/', meaning: '祝愿', example: 'Best wishes to you!' },
+          { id: 'u4-11', word: 'soup', hint: 'n. /suːp/', meaning: '汤', example: 'The noodle soup is warm and yummy.' },
+          { id: 'u4-12', word: 'bowl', hint: 'n. /bəʊl/', meaning: '碗', example: 'a bowl of birthday noodles' }
+        ],
+        sentences: [
+          'We invite you to our birthday party. Please bring a letter to your child.',
+          "It's a tradition to read parents' letters at our group birthday party.",
+          "It's a tradition to have a bowl of noodles on my birthday.",
+          'Thank you for all the time you spend with me. I love you!'
+        ],
+        highlights: [
+          'Fun time《A birthday invitation》：看清集体生日邀请函的 Time、Place（hall）和 Activities。',
+          'Talking time《Letters of love》：集体生日会上读父母写给孩子的信。',
+          'Story time《A bowl of birthday noodles》：Minmin 生日吃寿面，面里有蛋，寄托家人的祝愿。'
+        ],
+        checklist: [
+          '读｜A birthday invitation：读出邀请函 Time / Place / Activities 并尝试自己改编。',
+          '听·说｜Letters of love：练习 It\'s a tradition to … 与 Thank you for …',
+          '朗读｜A bowl of birthday noodles：说清生日吃寿面的传统与家人的爱。'
+        ]
+      },
+      {
+        id: 'unit5',
+        shortTitle: 'Unit 5',
+        title: 'Unit 5 Visiting places',
+        pages: '约第 39–46 页',
+        task: 'A photo of my favourite place（拿一张照片，介绍自己喜欢的地方）',
+        canSay: 'Is / Are there …?',
+        phonics: '字母 z 发 /z/（例词：amazing）。',
+        words: [
+          { id: 'u5-1', word: 'neighbourhood', hint: 'n. /ˈneɪbəhʊd/（英式拼写）', meaning: '社区', example: 'Welcome to my neighbourhood.' },
+          { id: 'u5-2', word: 'bridge', hint: 'n. /brɪdʒ/', meaning: '桥', example: 'There are many bridges in the water town.' },
+          { id: 'u5-3', word: 'museum', hint: 'n. /mjuˈziːəm/', meaning: '博物馆', example: 'Is there a museum? Yes, there is.' },
+          { id: 'u5-4', word: 'park', hint: 'n. /pɑːk/', meaning: '公园', example: 'There is a nice park near my home.' },
+          { id: 'u5-5', word: 'shop', hint: 'n. /ʃɒp/', meaning: '商店', example: 'Are there any shops? Yes, there are.' },
+          { id: 'u5-6', word: 'supermarket', hint: 'n. /ˈsuːpəmɑːkɪt/', meaning: '超市', example: 'There is a big supermarket.' },
+          { id: 'u5-7', word: 'cinema', hint: 'n. /ˈsɪnəmə/', meaning: '电影院', example: 'We watch a film at the cinema.' },
+          { id: 'u5-8', word: 'gondola', hint: 'n. /ˈɡɒndələ/', meaning: '贡多拉', example: 'People travel by gondola in Venice.' },
+          { id: 'u5-9', word: 'Italy', hint: 'n. /ˈɪtəli/', meaning: '意大利', example: 'Venice is a famous city in Italy.' },
+          { id: 'u5-10', word: 'by the water', hint: 'prep. 短语', meaning: '在水边', example: 'The houses are by the water.' },
+          { id: 'u5-11', word: 'out of battery', hint: '短语', meaning: '电池没电了', example: 'Oh no, my phone is out of battery.' },
+          { id: 'u5-12', word: 'amazing', hint: 'adj. /əˈmeɪzɪŋ/', meaning: '令人惊叹的', example: "That's amazing!" }
+        ],
+        sentences: [
+          'There is a museum. There are many bridges.',
+          "Is there a museum? Yes, there is. / No, there isn't.",
+          "Are there any bridges? Yes, there are. / No, there aren't.",
+          "That's amazing."
+        ],
+        highlights: [
+          'Chant time《Welcome to my neighbourhood》：走进自己的社区，点出公园、商店等地方。',
+          'Talking time《Visiting an old water town》：Shenshen、Yaoyao 和妈妈游览古水乡，说到桥和船。',
+          'Reading time《Visiting Venice》：威尼斯在意大利，是水上城市，人们坐贡多拉出行。'
+        ],
+        checklist: [
+          '听·跟读｜Topic words 与 Chant time：指认实际社区或课本插图中的地名。',
+          '问答｜Is / Are there …?：拿社区或旅游照片进行问答练习。',
+          '朗读｜Visiting Venice：说清威尼斯在意大利、房子在水边、出行坐船。',
+          '能说｜拿一张照片用 There is / There are 介绍自己喜欢的地方。'
+        ]
+      },
+      {
+        id: 'unit6',
+        shortTitle: 'Unit 6',
+        title: "Unit 6 It's autumn!",
+        pages: '约第 47–53 页',
+        task: 'Write a poem for autumn（为秋天写一首小诗）',
+        canSay: 'I like …ing in autumn.',
+        phonics: '字母 y 发 /j/（例词：year, you, yellow, yummy）。',
+        words: [
+          { id: 'u6-1', word: 'autumn', hint: 'n. /ˈɔːtəm/', meaning: '秋天', example: 'Autumn is my favourite season.' },
+          { id: 'u6-2', word: 'farm', hint: 'n. /fɑːm/', meaning: '农场', example: 'I like picking fruit on the farm.' },
+          { id: 'u6-3', word: 'fruit', hint: 'n. /fruːt/', meaning: '水果', example: 'We pick sweet fruit in autumn.' },
+          { id: 'u6-4', word: 'apple', hint: 'n. /ˈæpl/', meaning: '苹果', example: 'The red apples are yummy.' },
+          { id: 'u6-5', word: 'leaf', hint: 'n. /liːf/（单数）', meaning: '叶子', example: 'Look, a falling leaf!' },
+          { id: 'u6-6', word: 'leaves', hint: 'n. /liːvz/（复数）', meaning: '叶子（复数）', example: 'The golden leaves are falling.' },
+          { id: 'u6-7', word: 'fly south', hint: 'v. 短语', meaning: '南飞', example: 'Birds fly south in autumn.' },
+          { id: 'u6-8', word: 'golden', hint: 'adj. /ˈɡəʊldən/', meaning: '金色的', example: 'The fields are golden.' },
+          { id: 'u6-9', word: 'colourful', hint: 'adj. /ˈkʌləfl/（英式拼写）', meaning: '五彩缤纷的', example: 'I like collecting colourful leaves.' },
+          { id: 'u6-10', word: 'picking fruit on the farm', hint: '动名词短语', meaning: '在农场摘水果', example: 'I like picking fruit on the farm.' },
+          { id: 'u6-11', word: 'collecting colourful leaves', hint: '动名词短语', meaning: '收集彩色落叶', example: 'I like collecting colourful leaves.' },
+          { id: 'u6-12', word: 'watching birds flying south', hint: '动名词短语', meaning: '看鸟儿南飞', example: 'I like watching birds flying south.' }
+        ],
+        sentences: [
+          'Autumn is my favourite season.',
+          'I like collecting colourful leaves. / I like picking fruit on the farm.',
+          'Look, a falling leaf!',
+          'Oh, how beautiful!'
+        ],
+        highlights: [
+          'Rhyme time《I love autumn days》：歌谣写秋天的色彩、落叶和自己喜欢做的事。',
+          'Talking time《An autumn outing》：同学谈秋游，说在秋天爱做什么。',
+          'Story time《Autumn in Saihanba》：河北塞罕坝从沙地重新变成森林的故事。'
+        ],
+        checklist: [
+          '听·跟读｜Topic words 与 Rhyme time：说出 leaves、farm、fly south。',
+          '说｜An autumn outing：练习 I like …ing in autumn.',
+          '朗读｜Autumn in Saihanba：说清塞罕坝在河北，人们种树后又变绿了。',
+          '能说｜为秋天写几行小诗，说说秋天的颜色、天气和爱做的事。'
+        ]
+      },
+      {
+        id: 'unit7',
+        shortTitle: 'Unit 7',
+        title: 'Unit 7 My healthy breakfast',
+        pages: '约第 55–61 页',
+        task: 'A survey about a healthy breakfast（做一次健康早餐调查）',
+        canSay: 'How often …? Once / twice a week.',
+        phonics: '跟读课本 Sound 板块，例词 shouts。记住 baozi、jiaozi、shaomai、soya milk 的课本拼写。',
+        words: [
+          { id: 'u7-1', word: 'breakfast', hint: 'n. /ˈbrekfəst/', meaning: '早餐', example: 'Breakfast gives me energy.' },
+          { id: 'u7-2', word: 'menu', hint: 'n. /ˈmenjuː/', meaning: '菜单', example: 'Let\'s look at the breakfast menu.' },
+          { id: 'u7-3', word: 'juice', hint: 'n. /dʒuːs/', meaning: '果汁', example: 'I like drinking fruit juice.' },
+          { id: 'u7-4', word: 'milk', hint: 'n. /mɪlk/', meaning: '牛奶', example: 'Milk is good for me.' },
+          { id: 'u7-5', word: 'soya milk', hint: 'n. 短语（英式拼写）', meaning: '豆浆', example: 'How often do you have soya milk?' },
+          { id: 'u7-6', word: 'banana', hint: 'n. /bəˈnɑːnə/', meaning: '香蕉', example: 'I eat a banana every day.' },
+          { id: 'u7-7', word: 'bread', hint: 'n. /bred/', meaning: '面包', example: 'I like eating bread for breakfast.' },
+          { id: 'u7-8', word: 'baozi', hint: 'n. 课本拼写', meaning: '包子', example: 'I have baozi twice a week.' },
+          { id: 'u7-9', word: 'jiaozi', hint: 'n. 课本拼写', meaning: '饺子', example: 'My sister likes eating jiaozi.' },
+          { id: 'u7-10', word: 'shaomai', hint: 'n. 课本拼写', meaning: '烧卖', example: 'I have shaomai once a week.' },
+          { id: 'u7-11', word: 'sandwich', hint: 'n. /ˈsænwɪtʃ/', meaning: '三明治', example: 'James likes eating a sandwich.' },
+          { id: 'u7-12', word: 'orange juice', hint: 'n. 短语', meaning: '橙汁', example: 'I like drinking orange juice.' },
+          { id: 'u7-13', word: 'energy', hint: 'n. /ˈenədʒi/', meaning: '能量', example: 'Breakfast gives me energy.' },
+          { id: 'u7-14', word: 'protein', hint: 'n. /ˈprəʊtiːn/', meaning: '蛋白质', example: 'Milk and eggs have protein.' },
+          { id: 'u7-15', word: 'vitamin', hint: 'n. /ˈvɪtəmɪn/', meaning: '维生素', example: 'Fruit gives us vitamins.' },
+          { id: 'u7-16', word: 'once a week', hint: '频率短语', meaning: '一周一次', example: 'I eat noodles once a week.' },
+          { id: 'u7-17', word: 'twice a week', hint: '频率短语', meaning: '一周两次', example: 'I have baozi twice a week.' },
+          { id: 'u7-18', word: 'three times a week', hint: '频率短语', meaning: '一周三次', example: 'I drink soya milk three times a week.' },
+          { id: 'u7-19', word: 'every day', hint: '频率短语', meaning: '每天', example: 'I drink milk every day.' }
+        ],
+        sentences: [
+          'I like eating bread and drinking milk for breakfast.',
+          'How often do you have soya milk? Once a week. / Twice a week. / Three times a week. / Every day.',
+          'Milk is good for me. Breakfast gives me energy.'
+        ],
+        highlights: [
+          'Fun time 早餐菜单：按食物、饮品、水果点餐并听记。',
+          'Talking time《James\' favourite breakfast》：James 讲自己常吃的早餐和频率。',
+          'Story time《The best breakfast》：讨论什么样的早餐更健康、更合适。'
+        ],
+        checklist: [
+          '听·指认｜快速读出 baozi、jiaozi、shaomai、soya milk，不与拼音混淆。',
+          '问答｜How often …? 用 once / twice / three times a week 或 every day 回答。',
+          '朗读｜The best breakfast：读完能说清健康早餐要有不同食物。',
+          '能说｜做一次家庭健康早餐调查。'
+        ]
+      },
+      {
+        id: 'unit8',
+        shortTitle: 'Unit 8',
+        title: 'Unit 8 Be honest',
+        pages: '约第 63–69 页',
+        task: 'Writing tips for being an honest child（写几条做诚实孩子的小建议）',
+        canSay: 'Tell the truth. Keep your word.',
+        phonics: '跟读课本 Sound 板块，例词 time。',
+        words: [
+          { id: 'u8-1', word: 'honest', hint: 'adj. /ˈɒnɪst/（h 不发音）', meaning: '诚实的', example: 'We should be honest every day.' },
+          { id: 'u8-2', word: "keep one's word", hint: 'v. 短语', meaning: '守信用', example: 'She always keeps her word.' },
+          { id: 'u8-3', word: 'tell the truth', hint: 'v. 短语', meaning: '讲实话', example: 'Always tell the truth.' },
+          { id: 'u8-4', word: 'never tell a lie', hint: 'v. 短语', meaning: '从不说谎', example: 'Good children never tell a lie.' },
+          { id: 'u8-5', word: 'give back', hint: 'v. 短语', meaning: '归还', example: 'Give things back on time.' },
+          { id: 'u8-6', word: 'on time', hint: 'prep. 短语', meaning: '准时', example: 'Please come to school on time.' },
+          { id: 'u8-7', word: 'empty pot', hint: 'n. 短语', meaning: '空花盆', example: 'The boy brings an empty pot.' }
+        ],
+        sentences: [
+          'We should be honest every day.',
+          'She always tells the truth and keeps her word.',
+          'What happened? Are you all right?',
+          'Be honest. Tell the truth. Keep your word. Give things back.'
+        ],
+        highlights: [
+          'Song time《My lovely friends》：好朋友要诚实、守信。',
+          'Talking time《The right time》：在恰当的时候讲实话、把东西还回去。',
+          'Story time《The empty pot》（空花盆）：捧着空花盆依然选择诚实以对。'
+        ],
+        checklist: [
+          '听·跟读｜Topic words 与 Song time：熟练说出核心诚实短语。',
+          '分角色｜The right time：练 What happened? 和讲实话的回答。',
+          '朗读｜The empty pot：说出故事要旨——诚实比装样子更重要。',
+          '能说｜说出两三条诚实小贴士。'
+        ]
+      },
+      {
+        id: 'unit9',
+        shortTitle: 'Unit 9',
+        title: 'Unit 9 What time is it?',
+        pages: '约第 71–78 页',
+        task: 'Playing a board game about time（做一盘时间棋，和朋友一起玩）',
+        canSay: "It's … o'clock / half past … / ten to …",
+        phonics: 'qu 读 /kw/（例词：question）。掌握三种读法：整点 o\'clock，半点 half past，差几分到下一个整点 … to …。',
+        words: [
+          { id: 'u9-1', word: 'time', hint: 'n. /taɪm/', meaning: '时间', example: 'What time is it?' },
+          { id: 'u9-2', word: 'hour hand', hint: 'n. 短语', meaning: '时针', example: 'The short hand is the hour hand.' },
+          { id: 'u9-3', word: 'minute hand', hint: 'n. 短语', meaning: '分针', example: 'The long hand is the minute hand.' },
+          { id: 'u9-4', word: "seven o'clock", hint: '时间表达', meaning: '七点整', example: "It's seven o'clock." },
+          { id: 'u9-5', word: 'half past eleven', hint: '时间表达', meaning: '十一点半', example: "It's half past eleven." },
+          { id: 'u9-6', word: 'ten to four', hint: '时间表达', meaning: '差十分四点（三点五十）', example: "It's ten to four." },
+          { id: 'u9-7', word: 'morning', hint: 'n. /ˈmɔːnɪŋ/', meaning: '上午，早晨', example: "It's eleven in the morning in the UK." },
+          { id: 'u9-8', word: 'evening', hint: 'n. /ˈiːvnɪŋ/', meaning: '晚上，傍晚', example: "It's seven in the evening in Shanghai." },
+          { id: 'u9-9', word: 'night', hint: 'n. /naɪt/', meaning: '夜晚', example: 'Good night! Sweet dreams.' },
+          { id: 'u9-10', word: 'the Earth', hint: 'n. /ði ɜːθ/', meaning: '地球', example: 'We live on the Earth.' },
+          { id: 'u9-11', word: 'the moon', hint: 'n. /ðə muːn/', meaning: '月亮', example: 'Look at the bright moon at night.' },
+          { id: 'u9-12', word: 'Happy New Year', hint: '节日祝福', meaning: '新年快乐', example: 'Happy New Year, Lily!' }
+        ],
+        sentences: [
+          "What time is it? It's seven o'clock.",
+          "It's half past eleven.",
+          "It's ten to four.",
+          'Happy New Year!'
+        ],
+        highlights: [
+          'Chant time《What time is it?》：歌谣练习读钟表。',
+          'Talking time《Happy New Year》：上海晚上七点 vs 英国上午十一点，理解时差。',
+          'Reading time《What is time?》：时间既是钟表，也是四季与日夜。'
+        ],
+        checklist: [
+          '听·说｜指着钟说 hour hand / minute hand 及三种时间读法。',
+          '分角色｜Happy New Year：理解上海和英国同一时刻时间不同。',
+          '朗读｜What is time?：逐句跟读并思考 What is time in your mind?',
+          '能说｜玩课本第 78 页时间棋盘，用英语说出每格时间。'
+        ]
+      },
+      {
+        id: 'unit10',
+        shortTitle: 'Unit 10',
+        title: 'Unit 10 Weather',
+        pages: '约第 79–85 页',
+        task: 'Giving a weather report（为两个城市做天气预报）',
+        canSay: "How's the weather? It's … degrees.",
+        phonics: '跟读课本 Sound 板块；注意 weather、today、degree 等词的重音。',
+        words: [
+          { id: 'u10-1', word: 'weather', hint: 'n. /ˈweðə(r)/', meaning: '天气', example: "How's the weather in Shanghai today?" },
+          { id: 'u10-2', word: 'weather report', hint: 'n. 短语', meaning: '天气预报', example: 'Here is today\'s weather report.' },
+          { id: 'u10-3', word: 'sunny', hint: 'adj. /ˈsʌni/', meaning: '晴朗的', example: "It's warm and sunny." },
+          { id: 'u10-4', word: 'cloudy', hint: 'adj. /ˈklaʊdi/', meaning: '多云的', example: "It's cool and cloudy today." },
+          { id: 'u10-5', word: 'windy', hint: 'adj. /ˈwɪndi/', meaning: '有风的', example: "It's windy. Let's fly a kite." },
+          { id: 'u10-6', word: 'rainy', hint: 'adj. /ˈreɪni/', meaning: '下雨的', example: "It's cold and rainy. Take your umbrella." },
+          { id: 'u10-7', word: 'snowy', hint: 'adj. /ˈsnəʊi/', meaning: '下雪的', example: 'I like snowy days.' },
+          { id: 'u10-8', word: 'degree', hint: 'n. /dɪˈɡriː/', meaning: '摄氏度', example: "It's 23 degrees." },
+          { id: 'u10-9', word: 'umbrella', hint: 'n. /ʌmˈbrelə/', meaning: '雨伞', example: 'Take your umbrella.' },
+          { id: 'u10-10', word: 'Auckland', hint: 'n. /ˈɔːklənd/', meaning: '奥克兰（新西兰）', example: 'James is from Auckland.' }
+        ],
+        sentences: [
+          "How's the weather in Shanghai today?",
+          "It's cold and rainy. It's five degrees.",
+          "It's warm and sunny. It's 23 degrees.",
+          'Take your umbrella.'
+        ],
+        highlights: [
+          'Song time《We like different days》：家人喜欢不同的天气。',
+          'Talking time《The weather reports》：上海与奥克兰（Auckland）季节正好相反。',
+          'Story time《Special weather reporters》：乌龟、蜻蜓等动物的行为能预报下雨。'
+        ],
+        checklist: [
+          '听·跟读｜快速说出五种天气词并造句（I like … days.）。',
+          '说｜报上海和另一座城市的天气预报（城市、星期、天气、温度）。',
+          '朗读｜Special weather reporters：说清动物如何预报下雨。',
+          '能说｜看窗外实时报一段今天的天气预报。'
+        ]
+      }
+    ];
+
+    const CORE_PHRASE_GROUPS = [
+      {
+        title: '1. 约见面与告别',
+        text: 'See you soon. Shall we meet in the classroom? How about the computer room?',
+        note: '回头见。我们约在教室见面好吗？计算机机房怎么样？'
+      },
+      {
+        title: '2. 鼓励与加油',
+        text: "Don't be afraid. Have a try. Take it easy. Keep going. You can do it.",
+        note: '别害怕。试一试。放轻松。继续加油。你能做到的。'
+      },
+      {
+        title: '3. 校园与建筑表达',
+        text: 'keep tidy; on the ground floor; be made of bamboo',
+        note: '保持整洁；在一楼（英式）；用竹子建造'
+      },
+      {
+        title: '4. 诚实与守信',
+        text: "keep one's word; tell the truth; never tell a lie; give back; on time",
+        note: '守信用；讲实话；从不说谎；归还；准时'
+      },
+      {
+        title: '5. 频率表达（健康早餐）',
+        text: 'once a week; twice a week; three times a week; every day',
+        note: '一周一次；一周两次；一周三次；每天'
+      },
+      {
+        title: '6. 时间、节日与天气',
+        text: "What time is it? Happy New Year. How's the weather today?",
+        note: '现在几点了？新年快乐。今天天气怎么样？'
+      }
+    ];
+
+    const CORE_PHRASE_FLASHCARDS = [
+      { id: 'cp-1', word: 'See you soon.', hint: '交际用语', meaning: '回头见。', example: 'Shall we meet in the classroom? See you soon!' },
+      { id: 'cp-2', word: 'Shall we meet in the classroom?', hint: '提议句型', meaning: '我们在教室见面好吗？', example: 'How about the computer room?' },
+      { id: 'cp-3', word: "Don't be afraid. Have a try.", hint: '鼓励用语', meaning: '别害怕。试一试。', example: "Don't be afraid. Have a try!" },
+      { id: 'cp-4', word: 'Take it easy. Keep going.', hint: '鼓励用语', meaning: '放轻松。继续加油。', example: 'Take it easy. Keep going. You can do it.' },
+      { id: 'cp-5', word: 'keep tidy', hint: 'v. 短语', meaning: '保持整洁', example: 'Please keep our classroom tidy.' },
+      { id: 'cp-6', word: 'on the ground floor', hint: '英式楼层', meaning: '在一楼', example: 'The hall is on the ground floor.' },
+      { id: 'cp-7', word: 'be made of bamboo', hint: '短语', meaning: '用竹子建造', example: 'This school is made of bamboo.' },
+      { id: 'cp-8', word: "keep one's word", hint: 'v. 短语', meaning: '守信用', example: 'She always keeps her word.' },
+      { id: 'cp-9', word: 'tell the truth', hint: 'v. 短语', meaning: '讲实话', example: 'Always tell the truth.' },
+      { id: 'cp-10', word: 'never tell a lie', hint: 'v. 短语', meaning: '从不说谎', example: 'Good friends never tell a lie.' },
+      { id: 'cp-11', word: 'give back', hint: 'v. 短语', meaning: '归还', example: 'Give things back on time.' },
+      { id: 'cp-12', word: 'once a week', hint: '频率短语', meaning: '一周一次', example: 'I have shaomai once a week.' },
+      { id: 'cp-13', word: 'twice a week', hint: '频率短语', meaning: '一周两次', example: 'I have baozi twice a week.' },
+      { id: 'cp-14', word: 'three times a week', hint: '频率短语', meaning: '一周三次', example: 'I drink soya milk three times a week.' },
+      { id: 'cp-15', word: 'What time is it?', hint: '时间问句', meaning: '现在几点了？', example: "What time is it? It's half past eleven." },
+      { id: 'cp-16', word: "How's the weather today?", hint: '天气问句', meaning: '今天天气怎么样？', example: "How's the weather in Shanghai today?" }
+    ];
+
+    /**
+     * =========================================================================
+     * 2. STATE & PERSISTENCE
+     * =========================================================================
+     */
+    const STORAGE_KEY = 'shanghai_4a_english_review_v2';
+
+    let state = {
+      selectedUnitId: 'starter',
+      unitTab: 'flashcard',
+      speedMode: 'normal',        // 'normal' (0.95) | 'slow' (0.72)
+      selectedVoiceKey: 'online-gb',
+      autoSpeak: false,
+      masteredIds: [],
+      mistakeIds: [],
+      checkedItems: {},
+      specialPool: null
+    };
+
+    // Flashcard runtime
+    let fcList = [];
+    let fcIdx = 0;
+    let fcFlipped = false;
+
+    // Quiz runtime
+    let quizSubMode = 'choice';
+    let choiceDir = 'en-cn';
+    let choiceTarget = null;
+    let choiceLocked = false;
+    let choiceTotal = 0, choiceRight = 0, choiceStreak = 0;
+
+    let spellTargetItem = null;
+    let spellWordClean = '';
+    let spellMeaningClean = '';
+    let spellHintCount = 0;
+    let spellLocked = false;
+    let spellTotal = 0, spellRight = 0, spellStreak = 0;
+
+    // 15-minute Timer
+    let timerSeconds = 15 * 60;
+    let timerInterval = null;
+    let pendingConfirmCb = null;
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          state = { ...state, ...parsed, specialPool: null };
+        }
+      } catch (e) {
+        console.warn('Storage load failed:', e);
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          selectedUnitId: state.selectedUnitId === '__MISTAKES__' ? 'starter' : state.selectedUnitId,
+          speedMode: state.speedMode,
+          selectedVoiceKey: state.selectedVoiceKey,
+          autoSpeak: state.autoSpeak,
+          masteredIds: state.masteredIds,
+          mistakeIds: state.mistakeIds,
+          checkedItems: state.checkedItems
+        }));
+      } catch (e) {
+        console.warn('Storage save failed:', e);
+      }
+    }
+
+    /**
+     * =========================================================================
+     * 3. DUAL-ENGINE NATURAL BRITISH AUDIO SYSTEM (Youdao HD en-GB + Ranked Local)
+     * =========================================================================
+     */
+    const audioEngine = {
+      sessionId: 0,
+      activeAudio: null,
+      activeTimer: null,
+      activeBtn: null,
+      rankedVoices: []
+    };
+
+    /**
+     * Score browser voices so Natural/Online British voices rank highest,
+     * followed by Google UK English, Apple Enhanced/Premium/Siri/Serena/Daniel/Martha,
+     * and push robotic/legacy voices to the bottom.
+     */
+    function scoreBritishVoice(v) {
+      const name = (v.name || '').toLowerCase();
+      const lang = (v.lang || '').toLowerCase();
+      let score = 0;
+
+      // Must strongly prefer British English
+      if (lang === 'en-gb' || lang === 'en_gb') score += 500;
+      else if (lang.startsWith('en-gb')) score += 450;
+      else if (lang.startsWith('en')) score += 50;
+      else return -1;
+
+      // Highest tier: Neural / Natural / Online cloud voices (e.g. Edge Sonia/Libby/Ryan Online Natural)
+      if (name.includes('natural')) score += 300;
+      if (name.includes('online')) score += 220;
+      if (/\b(sonia|libby|ryan|maisie|thomas)\b/.test(name)) score += 160;
+
+      // Second tier: Google UK English
+      if (name.includes('google') && (name.includes('uk') || lang.includes('gb'))) score += 260;
+
+      // Third tier: Apple Enhanced / Premium / Siri / high-quality macOS/iOS UK voices
+      if (name.includes('premium') || name.includes('enhanced') || name.includes('siri')) score += 200;
+      if (/\b(serena|daniel|martha|arthur|kate|oliver|stephanie)\b/.test(name)) score += 140;
+
+      // Penalize legacy robotic engines
+      if (/(espeak|compact|festival|mbrola|microsoft hazel|microsoft george|microsoft susan)/.test(name)) {
+        score -= 180;
+      }
+
+      return score;
+    }
+
+    function refreshVoiceSelector() {
+      const select = document.getElementById('voiceSelect');
+      if (!select) return;
+
+      const voices = ('speechSynthesis' in window) ? window.speechSynthesis.getVoices() : [];
+      const gbVoices = voices
+        .map(v => ({ voice: v, score: scoreBritishVoice(v) }))
+        .filter(item => item.score >= 400) // Strictly en-GB voices in dropdown
+        .sort((a, b) => b.score - a.score);
+
+      // Keep fallback en voices sorted too in case device has zero en-GB voices
+      const allEnRanked = voices
+        .map(v => ({ voice: v, score: scoreBritishVoice(v) }))
+        .filter(item => item.score > 0)
+        .sort((a, b) => b.score - a.score);
+
+      audioEngine.rankedVoices = gbVoices.length ? gbVoices.map(x => x.voice) : allEnRanked.map(x => x.voice);
+
+      let html = `<option value="online-gb">✨ 高清在线英音（推荐）</option>`;
+      gbVoices.forEach(({ voice }) => {
+        const key = `local::${voice.voiceURI || voice.name}`;
+        const cleanName = voice.name
+          .replace(/Microsoft\s+/i, '')
+          .replace(/\s*-\s*English \(United Kingdom\)/i, '')
+          .replace(/\(English \(United Kingdom\)\)/i, '')
+          .trim();
+        const badge = /natural|online/i.test(voice.name) ? '🌟 ' : (/google|enhanced|premium|siri/i.test(voice.name) ? '🎧 ' : '🇬🇧 ');
+        html += `<option value="${escapeHtml(key)}">${badge}${escapeHtml(cleanName)}</option>`;
+      });
+
+      select.innerHTML = html;
+
+      // Restore saved selection if still available, else default to online-gb
+      const validKeys = ['online-gb', ...gbVoices.map(({ voice }) => `local::${voice.voiceURI || voice.name}`)];
+      if (validKeys.includes(state.selectedVoiceKey)) {
+        select.value = state.selectedVoiceKey;
+      } else {
+        state.selectedVoiceKey = 'online-gb';
+        select.value = 'online-gb';
+      }
+    }
+
+    function onVoiceChange(val) {
+      state.selectedVoiceKey = val;
+      saveState();
+      stopAllAudio();
+      const label = val === 'online-gb' ? '高清在线英音（推荐）' : '本地英式音色';
+      showToast(`已切换为：${label}`, 'info');
+    }
+
+    function previewSelectedVoice(btnEl) {
+      speakBritish("Good morning! Welcome to my school. It's warm and sunny today.", btnEl);
+    }
+
+    function setSpeedMode(mode) {
+      state.speedMode = mode;
+      saveState();
+      updateSpeedButtons();
+      showToast(mode === 'slow' ? '已切换为慢速跟读（不变调 0.72x）' : '已切换为正常英音语速（0.95x）', 'info');
+    }
+
+    function updateSpeedButtons() {
+      const nBtn = document.getElementById('rateNormalBtn');
+      const sBtn = document.getElementById('rateSlowBtn');
+      const on = 'bg-white text-indigoAtlas-700 shadow-sm font-bold';
+      const off = 'text-ink-500 hover:text-ink-900 font-semibold';
+      nBtn.className = `px-2.5 py-1 rounded-lg text-xs transition ${state.speedMode === 'normal' ? on : off}`;
+      sBtn.className = `px-2.5 py-1 rounded-lg text-xs transition ${state.speedMode === 'slow' ? on : off}`;
+    }
+
+    /**
+     * Preprocess raw textbook text into natural speakable segments:
+     * - Remove Chinese notes in parentheses & Chinese prefix labels
+     * - Strip ellipsis (… / ...) so TTS won't stutter
+     * - Split parallel sentences separated by " / ", " = ", or "; " into separate segments
+     */
+    function prepareSpeechSegments(rawText) {
+      if (!rawText) return [];
+      const stripped = String(rawText)
+        .replace(/（[^）]*）/g, '')
+        .replace(/\([^)]*\)/g, '')
+        .replace(/^[\u4e00-\u9fa5\d–\-]+：\s*/g, '')
+        .replace(/…|\.{3,}/g, ' ')
+        .trim();
+
+      // Split on "/", "=", ";" for natural sequential playback with 450ms pauses
+      const parts = stripped
+        .split(/\s*(?:\/|=|;|；)\s*/)
+        .map(seg => seg.replace(/\s+/g, ' ').trim())
+        .filter(seg => seg.length > 0);
+
+      return parts;
+    }
+
+    function clearActiveButtonVisual() {
+      if (audioEngine.activeBtn) {
+        audioEngine.activeBtn.classList.remove('is-speaking');
+        audioEngine.activeBtn = null;
+      }
+    }
+
+    function stopAllAudio() {
+      audioEngine.sessionId++;
+      if (audioEngine.activeTimer) {
+        clearTimeout(audioEngine.activeTimer);
+        audioEngine.activeTimer = null;
+      }
+      if (audioEngine.activeAudio) {
+        try {
+          audioEngine.activeAudio.onended = null;
+          audioEngine.activeAudio.onerror = null;
+          audioEngine.activeAudio.pause();
+          audioEngine.activeAudio.src = '';
+        } catch (_) {}
+        audioEngine.activeAudio = null;
+      }
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch (_) {}
+      }
+      clearActiveButtonVisual();
+    }
+
+    /**
+     * Play a single segment via Youdao HD British English Audio (type=1),
+     * with 3.5s load timeout and automatic silent fallback to local en-GB TTS.
+     */
+    function playSegmentOnline(text, rate, sessionId) {
+      return new Promise((resolve) => {
+        if (sessionId !== audioEngine.sessionId) return resolve();
+
+        const url = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&type=1`;
+        const audio = new Audio();
+        audio.preload = 'auto';
+        audio.playbackRate = rate;
+        // Preserve natural vocal pitch when playing slowly
+        audio.preservesPitch = true;
+        audio.mozPreservesPitch = true;
+        audio.webkitPreservesPitch = true;
+
+        audioEngine.activeAudio = audio;
+        let settled = false;
+
+        const finish = (fallbackToLocal) => {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timeoutId);
+          audio.oncanplaythrough = null;
+          audio.onplaying = null;
+          audio.onended = null;
+          audio.onerror = null;
+
+          if (sessionId !== audioEngine.sessionId) return resolve();
+
+          if (fallbackToLocal) {
+            try { audio.pause(); audio.src = ''; } catch (_) {}
+            playSegmentLocal(text, rate, sessionId).then(resolve);
+          } else {
+            resolve();
+          }
+        };
+
+        // 3.5-second timeout prevents hanging on restricted networks
+        const timeoutId = setTimeout(() => {
+          if (!settled) finish(true);
+        }, 3500);
+
+        audio.onplaying = () => {
+          clearTimeout(timeoutId);
+          // Re-apply playbackRate & pitch preservation once playback starts (iOS/Safari quirk)
+          audio.playbackRate = rate;
+          audio.preservesPitch = true;
+          audio.webkitPreservesPitch = true;
+        };
+
+        audio.onended = () => finish(false);
+        audio.onerror = () => finish(true);
+
+        audio.src = url;
+        const playPromise = audio.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+          playPromise.catch(() => finish(true));
+        }
+      });
+    }
+
+    /**
+     * Play a single segment via the user-selected or highest-scored local en-GB voice.
+     */
+    function playSegmentLocal(text, rate, sessionId) {
+      return new Promise((resolve) => {
+        if (sessionId !== audioEngine.sessionId || !('speechSynthesis' in window)) {
+          return resolve();
+        }
+        try {
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(text);
+          utter.lang = 'en-GB';
+          utter.rate = rate;
+
+          let chosenVoice = null;
+          if (state.selectedVoiceKey.startsWith('local::')) {
+            const targetKey = state.selectedVoiceKey.slice(7);
+            chosenVoice = window.speechSynthesis.getVoices().find(v => (v.voiceURI || v.name) === targetKey);
+          }
+          if (!chosenVoice && audioEngine.rankedVoices.length) {
+            chosenVoice = audioEngine.rankedVoices[0];
+          }
+          if (chosenVoice) utter.voice = chosenVoice;
+
+          let done = false;
+          const finish = () => {
+            if (done) return;
+            done = true;
+            resolve();
+          };
+
+          utter.onend = finish;
+          utter.onerror = finish;
+          window.speechSynthesis.speak(utter);
+        } catch (_) {
+          resolve();
+        }
+      });
+    }
+
+    /**
+     * Main entry point to speak any English word or sentence naturally.
+     * - Clicking the same playing button toggles stop.
+     * - Plays segmented clauses sequentially with a 450ms pause.
+     */
+    async function speakBritish(rawText, btnEl = null, forceSlow = false) {
+      // Toggle stop if user taps the currently playing button again
+      if (btnEl && audioEngine.activeBtn === btnEl) {
+        stopAllAudio();
+        return;
+      }
+
+      stopAllAudio();
+      const segments = prepareSpeechSegments(rawText);
+      if (!segments.length) return;
+
+      const sessionId = audioEngine.sessionId;
+      const rate = (forceSlow || state.speedMode === 'slow') ? 0.72 : 0.95;
+
+      if (btnEl) {
+        audioEngine.activeBtn = btnEl;
+        btnEl.classList.add('is-speaking');
+      }
+
+      const useOnline = state.selectedVoiceKey === 'online-gb';
+
+      for (let i = 0; i < segments.length; i++) {
+        if (sessionId !== audioEngine.sessionId) break;
+
+        if (useOnline) {
+          await playSegmentOnline(segments[i], rate, sessionId);
+        } else {
+          await playSegmentLocal(segments[i], rate, sessionId);
+        }
+
+        // Natural 450ms pause between parallel sentences/clauses
+        if (i < segments.length - 1 && sessionId === audioEngine.sessionId) {
+          await new Promise(res => {
+            audioEngine.activeTimer = setTimeout(res, 450);
+          });
+        }
+      }
+
+      if (sessionId === audioEngine.sessionId) {
+        clearActiveButtonVisual();
+      }
+    }
+
+    /**
+     * =========================================================================
+     * 4. 15-MINUTE DAILY COUNTDOWN TIMER
+     * =========================================================================
+     */
+    function renderTimer() {
+      const m = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+      const s = String(timerSeconds % 60).padStart(2, '0');
+      document.getElementById('timerDisplay').textContent = `${m}:${s}`;
+    }
+
+    function toggleTimer() {
+      const btn = document.getElementById('timerToggleBtn');
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        btn.textContent = '继续';
+        btn.className = 'px-2 py-1 rounded-lg bg-indigoAtlas-50 hover:bg-indigoAtlas-100 text-indigoAtlas-700 text-xs font-semibold transition';
+      } else {
+        if (timerSeconds <= 0) timerSeconds = 15 * 60;
+        btn.textContent = '暂停';
+        btn.className = 'px-2 py-1 rounded-lg bg-terracotta-50 hover:bg-terracotta-100 text-terracotta-700 text-xs font-semibold transition';
+        timerInterval = setInterval(() => {
+          timerSeconds--;
+          renderTimer();
+          if (timerSeconds <= 0) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            btn.textContent = '开始';
+            showToast('🎉 太棒了！今天的 15 分钟英语复习已完成！', 'success');
+          }
+        }, 1000);
+      }
+    }
+
+    function resetTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      timerSeconds = 15 * 60;
+      renderTimer();
+      const btn = document.getElementById('timerToggleBtn');
+      btn.textContent = '开始';
+      btn.className = 'px-2 py-1 rounded-lg bg-indigoAtlas-50 hover:bg-indigoAtlas-100 text-indigoAtlas-700 text-xs font-semibold transition';
+    }
+
+    /**
+     * =========================================================================
+     * 5. DATA HELPERS, NAVIGATION & GLOBAL PROGRESS
+     * =========================================================================
+     */
+    function getAllTextbookWords() {
+      const list = [];
+      UNITS.forEach(u => {
+        u.words.forEach(w => list.push({ ...w, unitId: u.id, unitTitle: u.shortTitle }));
+      });
+      return list;
+    }
+
+    function getActiveWordPool() {
+      if (state.specialPool === 'mistakes') {
+        const set = new Set(state.mistakeIds);
+        return getAllTextbookWords().filter(w => set.has(w.id));
+      }
+      if (state.specialPool === 'core-phrases') {
+        return [...CORE_PHRASE_FLASHCARDS];
+      }
+      if (state.specialPool === 'all-book') {
+        return getAllTextbookWords();
+      }
+      const u = UNITS.find(x => x.id === state.selectedUnitId);
+      return u ? [...u.words] : [];
+    }
+
+    function renderNavigation() {
+      const desktop = document.getElementById('desktopUnitNav');
+      const mobile = document.getElementById('mobileUnitNav');
+      const masteredSet = new Set(state.masteredIds);
+
+      const navItems = [
+        ...UNITS.map(u => {
+          const done = u.words.filter(w => masteredSet.has(w.id)).length;
+          return { id: u.id, short: u.shortTitle, label: u.title, sub: `${done}/${u.words.length}` };
+        }),
+        { id: '__REVIEW__', short: '全册复习', label: '⭐ 全册核心复习', sub: '总览' },
+        { id: '__MISTAKES__', short: `错题本(${state.mistakeIds.length})`, label: '📌 错题本', sub: `${state.mistakeIds.length}` }
+      ];
+
+      desktop.innerHTML = navItems.map(item => {
+        const active = !state.specialPool && state.selectedUnitId === item.id;
+        return `
+          <button onclick="selectUnit('${item.id}')" class="w-full text-left px-3 py-2.5 rounded-2xl transition flex items-center justify-between gap-2 ${
+            active
+              ? 'bg-indigoAtlas-600 text-white shadow-sm font-bold'
+              : 'text-ink-700 hover:bg-ivory-100 font-medium'
+          }">
+            <span class="text-xs sm:text-sm truncate">${escapeHtml(item.label)}</span>
+            <span class="text-[11px] shrink-0 px-1.5 py-0.5 rounded-md ${active ? 'bg-white/20 text-white' : 'bg-ivory-100 text-ink-500'}">${item.sub}</span>
+          </button>
+        `;
+      }).join('');
+
+      mobile.innerHTML = navItems.map(item => {
+        const active = !state.specialPool && state.selectedUnitId === item.id;
+        return `
+          <button onclick="selectUnit('${item.id}')" class="shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold border transition ${
+            active
+              ? 'bg-indigoAtlas-600 text-white border-indigoAtlas-600 shadow-sm'
+              : 'bg-white text-ink-700 border-ivory-200 hover:border-indigoAtlas-500'
+          }">
+            ${escapeHtml(item.short)}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function updateGlobalStats() {
+      const allWords = getAllTextbookWords();
+      const masteredSet = new Set(state.masteredIds);
+      const masteredCount = allWords.filter(w => masteredSet.has(w.id)).length;
+      const pct = allWords.length ? Math.round((masteredCount / allWords.length) * 100) : 0;
+
+      let totalChecks = 0, doneChecks = 0;
+      UNITS.forEach(u => {
+        u.checklist.forEach((_, i) => {
+          totalChecks++;
+          if (state.checkedItems[`${u.id}-${i}`]) doneChecks++;
+        });
+      });
+
+      document.getElementById('globalMasteredCount').textContent = masteredCount;
+      document.getElementById('globalTotalWords').textContent = allWords.length;
+      document.getElementById('globalChecklistDone').textContent = doneChecks;
+      document.getElementById('globalChecklistTotal').textContent = totalChecks;
+      document.getElementById('globalProgressBar').style.width = `${pct}%`;
+      document.getElementById('globalProgressPct').textContent = `${pct}%`;
+      document.getElementById('headerMistakeBadge').textContent = state.mistakeIds.length;
+
+      renderNavigation();
+    }
+
+    function selectUnit(id) {
+      stopAllAudio();
+      state.selectedUnitId = id;
+      state.specialPool = null;
+      document.getElementById('specialPracticeBanner').classList.add('hidden');
+      saveState();
+      renderNavigation();
+
+      document.getElementById('unitWorkspace').classList.add('hidden');
+      document.getElementById('reviewWorkspace').classList.add('hidden');
+      document.getElementById('mistakeWorkspace').classList.add('hidden');
+
+      if (id === '__REVIEW__') {
+        document.getElementById('reviewWorkspace').classList.remove('hidden');
+        renderFullBookReview();
+      } else if (id === '__MISTAKES__') {
+        document.getElementById('mistakeWorkspace').classList.remove('hidden');
+        renderMistakeBook();
+      } else {
+        document.getElementById('unitWorkspace').classList.remove('hidden');
+        renderUnitHeader();
+        switchUnitTab(state.unitTab);
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderUnitHeader() {
+      const u = UNITS.find(x => x.id === state.selectedUnitId);
+      if (!u) return;
+      const masteredSet = new Set(state.masteredIds);
+      const done = u.words.filter(w => masteredSet.has(w.id)).length;
+
+      document.getElementById('unitPageBadge').textContent = u.pages;
+      document.getElementById('unitProgressBadge').textContent = `本单元已掌握 ${done} / ${u.words.length}`;
+      document.getElementById('unitTitle').textContent = u.title;
+      document.getElementById('unitTaskSubtitle').textContent = `单元任务：${u.task}`;
+
+      ['utab-guide', 'utab-checklist'].forEach(id => document.getElementById(id).classList.remove('hidden'));
+    }
+
+    function switchUnitTab(tab) {
+      stopAllAudio();
+      state.unitTab = tab;
+
+      document.querySelectorAll('.unit-tab-btn').forEach(btn => {
+        btn.className = 'unit-tab-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center justify-center gap-1.5 text-ink-600 hover:text-ink-900 hover:bg-white/60';
+      });
+      const activeBtn = document.getElementById(`utab-${tab}`);
+      if (activeBtn) {
+        activeBtn.className = 'unit-tab-btn py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-1.5 bg-white text-indigoAtlas-700 shadow-sm border border-ivory-200';
+      }
+
+      document.querySelectorAll('.unit-panel').forEach(p => p.classList.add('hidden'));
+      document.getElementById(`uview-${tab}`).classList.remove('hidden');
+
+      if (tab === 'flashcard') initFlashcards();
+      else if (tab === 'guide') renderUnitGuide();
+      else if (tab === 'quiz') initQuizArea();
+      else if (tab === 'checklist') renderUnitChecklist();
+    }
+
+    /**
+     * =========================================================================
+     * 6. TAB 1: FLASHCARDS
+     * =========================================================================
+     */
+    function initFlashcards() {
+      fcList = getActiveWordPool();
+      fcIdx = 0;
+      fcFlipped = false;
+      document.getElementById('autoSpeakCheck').checked = state.autoSpeak;
+      renderFlashcard();
+    }
+
+    function renderFlashcard() {
+      stopAllAudio();
+      if (!fcList.length) {
+        document.getElementById('fcCounter').textContent = '0 / 0';
+        document.getElementById('fcFrontWord').textContent = '当前没有需要复习的词条';
+        document.getElementById('fcFrontHint').textContent = '';
+        document.getElementById('fcBackWord').textContent = '';
+        document.getElementById('fcBackHint').textContent = '';
+        document.getElementById('fcBackMeaning').textContent = '全部完成！';
+        document.getElementById('fcBackExample').textContent = '';
+        return;
+      }
+
+      if (fcIdx >= fcList.length) fcIdx = 0;
+      if (fcIdx < 0) fcIdx = fcList.length - 1;
+
+      const item = fcList[fcIdx];
+      fcFlipped = false;
+      document.getElementById('fcCardInner').classList.remove('rotate-y-180');
+
+      document.getElementById('fcCounter').textContent = `${fcIdx + 1} / ${fcList.length}`;
+      document.getElementById('fcFrontWord').textContent = item.word;
+      document.getElementById('fcFrontHint').textContent = item.hint || '';
+      document.getElementById('fcBackWord').textContent = item.word;
+      document.getElementById('fcBackHint').textContent = item.hint || '';
+      document.getElementById('fcBackMeaning').textContent = item.meaning;
+      document.getElementById('fcBackExample').textContent = item.example || '结合课本原文一起听读效果更好哦！';
+
+      const tag = document.getElementById('fcStatusTag');
+      if (state.masteredIds.includes(item.id)) {
+        tag.textContent = '✓ 已掌握';
+        tag.className = 'text-xs font-semibold px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200';
+      } else if (state.mistakeIds.includes(item.id)) {
+        tag.textContent = '● 在错题本中';
+        tag.className = 'text-xs font-semibold px-2.5 py-1 rounded-lg bg-terracotta-50 text-terracotta-700 border border-terracotta-200';
+      } else {
+        tag.className = 'hidden';
+      }
+
+      if (state.autoSpeak) {
+        speakBritish(item.word, document.getElementById('fcFrontSpeakBtn'));
+      }
+    }
+
+    function flipFlashcard() {
+      if (!fcList.length) return;
+      fcFlipped = !fcFlipped;
+      document.getElementById('fcCardInner').classList.toggle('rotate-y-180', fcFlipped);
+    }
+
+    function nextFlashcard() {
+      if (!fcList.length) return;
+      fcIdx = (fcIdx + 1) % fcList.length;
+      renderFlashcard();
+    }
+
+    function prevFlashcard() {
+      if (!fcList.length) return;
+      fcIdx = (fcIdx - 1 + fcList.length) % fcList.length;
+      renderFlashcard();
+    }
+
+    function shuffleFlashcards() {
+      if (!fcList.length) return;
+      fcList = shuffleArray([...fcList]);
+      fcIdx = 0;
+      renderFlashcard();
+      showToast('已随机打乱卡片顺序', 'info');
+    }
+
+    function toggleAutoSpeak(checked) {
+      state.autoSpeak = checked;
+      saveState();
+    }
+
+    function speakCurrentCard(isExample, btnEl) {
+      if (!fcList.length) return;
+      const item = fcList[fcIdx];
+      speakBritish(isExample ? (item.example || item.word) : item.word, btnEl);
+    }
+
+    function markCurrentCard(isMastered) {
+      if (!fcList.length) return;
+      const item = fcList[fcIdx];
+      if (isMastered) {
+        if (!state.masteredIds.includes(item.id)) state.masteredIds.push(item.id);
+        state.mistakeIds = state.mistakeIds.filter(id => id !== item.id);
+        showToast(`太棒了！"${item.word}" 已标记掌握`, 'success');
+        if (state.specialPool === 'mistakes') {
+          fcList.splice(fcIdx, 1);
+          saveState();
+          updateGlobalStats();
+          if (!fcList.length) showToast('🎉 错题本闪卡已全部消灭！', 'success');
+          renderFlashcard();
+          return;
+        }
+      } else {
+        if (!state.mistakeIds.includes(item.id)) state.mistakeIds.push(item.id);
+        state.masteredIds = state.masteredIds.filter(id => id !== item.id);
+        showToast(`"${item.word}" 已加入错题本`, 'warn');
+      }
+      saveState();
+      updateGlobalStats();
+      if (!state.specialPool) renderUnitHeader();
+      nextFlashcard();
+    }
+
+    /**
+     * =========================================================================
+     * 7. TAB 2: SENTENCES & GUIDE
+     * =========================================================================
+     */
+    function renderUnitGuide() {
+      const u = UNITS.find(x => x.id === state.selectedUnitId);
+      if (!u) return;
+
+      document.getElementById('guideTask').textContent = u.task;
+      document.getElementById('guidePhonics').textContent = u.phonics;
+
+      document.getElementById('guideSentencesList').innerHTML = u.sentences.map((s, idx) => `
+        <div class="flex items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl bg-ivory-50 border border-ivory-200 hover:border-indigoAtlas-200 transition">
+          <div class="flex items-start gap-3">
+            <span class="w-6 h-6 rounded-lg bg-white border border-ivory-200 text-xs font-bold text-indigoAtlas-600 flex items-center justify-center shrink-0 mt-0.5">${idx + 1}</span>
+            <p class="text-sm sm:text-base font-semibold text-ink-900 leading-relaxed">${escapeHtml(s)}</p>
+          </div>
+          <button onclick="speakBritish('${escapeJs(s)}', this)" class="shrink-0 px-3.5 py-2 rounded-xl bg-white hover:bg-indigoAtlas-50 border border-ivory-200 hover:border-indigoAtlas-200 text-indigoAtlas-700 text-xs font-bold transition shadow-sm" title="点击自然英音朗读">
+            🔊 朗读
+          </button>
+        </div>
+      `).join('');
+
+      document.getElementById('guideHighlightsList').innerHTML = u.highlights.map(h => `
+        <li class="flex items-start gap-2.5">
+          <span class="w-2 h-2 rounded-full bg-terracotta-500 shrink-0 mt-2"></span>
+          <span>${escapeHtml(h)}</span>
+        </li>
+      `).join('');
+    }
+
+    /**
+     * =========================================================================
+     * 8. TAB 3: QUIZ & SPELLING
+     * =========================================================================
+     */
+    function initQuizArea() {
+      setQuizSubMode(quizSubMode);
+    }
+
+    function setQuizSubMode(mode) {
+      stopAllAudio();
+      quizSubMode = mode;
+      const cBtn = document.getElementById('qmode-choice');
+      const sBtn = document.getElementById('qmode-spelling');
+      const on = 'bg-indigoAtlas-600 text-white shadow-sm';
+      const off = 'text-ink-600 hover:text-ink-900';
+
+      cBtn.className = `px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition ${mode === 'choice' ? on : off}`;
+      sBtn.className = `px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition ${mode === 'spelling' ? on : off}`;
+
+      document.getElementById('choiceDirWrap').classList.toggle('hidden', mode !== 'choice');
+      document.getElementById('quizChoiceBox').classList.toggle('hidden', mode !== 'choice');
+      document.getElementById('quizSpellingBox').classList.toggle('hidden', mode !== 'spelling');
+
+      if (mode === 'choice') {
+        updateChoiceDirButtons();
+        nextChoiceQuestion();
+      } else {
+        nextSpellQuestion();
+      }
+    }
+
+    function setChoiceDir(dir) {
+      choiceDir = dir;
+      updateChoiceDirButtons();
+      nextChoiceQuestion();
+    }
+
+    function updateChoiceDirButtons() {
+      const b1 = document.getElementById('qdir-encn');
+      const b2 = document.getElementById('qdir-cnen');
+      const on = 'bg-white text-ink-900 shadow-sm';
+      const off = 'text-ink-500 hover:text-ink-800';
+      b1.className = `px-3 py-1 rounded-lg text-xs font-semibold transition ${choiceDir === 'en-cn' ? on : off}`;
+      b2.className = `px-3 py-1 rounded-lg text-xs font-semibold transition ${choiceDir === 'cn-en' ? on : off}`;
+    }
+
+    function nextChoiceQuestion() {
+      stopAllAudio();
+      const pool = getActiveWordPool();
+      const fullGrade4APool = getAllTextbookWords();
+      if (!pool.length) return;
+
+      choiceLocked = false;
+      choiceTarget = pool[Math.floor(Math.random() * pool.length)];
+
+      // Distractors strictly drawn from Grade 4A textbook words
+      let distractors = shuffleArray(pool.filter(w => w.id !== choiceTarget.id)).slice(0, 3);
+      if (distractors.length < 3) {
+        const extra = shuffleArray(fullGrade4APool.filter(w => w.id !== choiceTarget.id && !distractors.some(d => d.id === w.id)));
+        distractors = [...distractors, ...extra].slice(0, 3);
+      }
+      const options = shuffleArray([choiceTarget, ...distractors]);
+
+      document.getElementById('choiceFeedback').classList.add('hidden');
+      const audioBtn = document.getElementById('choiceAudioBtn');
+
+      if (choiceDir === 'en-cn') {
+        document.getElementById('choicePromptLabel').textContent = '选择正确的中文意思';
+        document.getElementById('choicePromptText').textContent = choiceTarget.word;
+        document.getElementById('choicePromptText').className = 'font-serif text-2xl sm:text-3xl font-bold text-ink-900 break-words';
+        audioBtn.classList.remove('hidden');
+      } else {
+        document.getElementById('choicePromptLabel').textContent = '选择对应的英文单词或短语';
+        document.getElementById('choicePromptText').textContent = choiceTarget.meaning;
+        document.getElementById('choicePromptText').className = 'text-xl sm:text-2xl font-bold text-ink-900 break-words';
+        audioBtn.classList.add('hidden');
+      }
+
+      const letters = ['A', 'B', 'C', 'D'];
+      const optBox = document.getElementById('choiceOptions');
+      optBox.innerHTML = '';
+
+      options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.dataset.id = opt.id;
+        btn.onclick = () => checkChoiceAnswer(opt, btn);
+        btn.className = 'choice-opt w-full text-left px-4 py-3.5 rounded-2xl border-2 border-ivory-200 bg-ivory-50/50 hover:bg-white hover:border-indigoAtlas-500 transition flex items-center gap-3.5';
+        const txt = choiceDir === 'en-cn' ? opt.meaning : opt.word;
+        btn.innerHTML = `
+          <span class="w-7 h-7 rounded-lg bg-white border border-ivory-200 flex items-center justify-center text-xs font-bold text-ink-500 shrink-0">${letters[i]}</span>
+          <span class="${choiceDir === 'cn-en' ? 'font-serif text-base sm:text-lg font-bold' : 'text-sm sm:text-base font-medium'} text-ink-900">${escapeHtml(txt)}</span>
+        `;
+        optBox.appendChild(btn);
+      });
+    }
+
+    function checkChoiceAnswer(selected, btnEl) {
+      if (choiceLocked) return;
+      choiceLocked = true;
+      choiceTotal++;
+
+      const isRight = selected.id === choiceTarget.id;
+      document.querySelectorAll('.choice-opt').forEach(b => {
+        b.disabled = true;
+        if (b.dataset.id === choiceTarget.id) {
+          b.className = 'choice-opt w-full text-left px-4 py-3.5 rounded-2xl border-2 border-emerald-500 bg-emerald-50 flex items-center gap-3.5';
+        }
+      });
+
+      const title = document.getElementById('choiceFeedbackTitle');
+      if (isRight) {
+        choiceRight++;
+        choiceStreak++;
+        title.innerHTML = `<span class="text-emerald-700">🎉 答对啦！真棒！</span>`;
+      } else {
+        choiceStreak = 0;
+        btnEl.className = 'choice-opt w-full text-left px-4 py-3.5 rounded-2xl border-2 border-red-400 bg-red-50 flex items-center gap-3.5';
+        addWordToMistakes(choiceTarget.id);
+        title.innerHTML = `<span class="text-terracotta-700">💡 没关系，已自动加入错题本，多读两遍！</span>`;
+      }
+
+      const acc = Math.round((choiceRight / choiceTotal) * 100);
+      document.getElementById('choiceStats').textContent = `连对 ${choiceStreak} 题 · 正确率 ${acc}%`;
+      document.getElementById('choiceExpLine').textContent = `${choiceTarget.word} — ${choiceTarget.meaning}`;
+      document.getElementById('choiceExpTip').textContent = choiceTarget.example || '';
+      document.getElementById('choiceFeedback').classList.remove('hidden');
+
+      speakBritish(choiceTarget.word);
+    }
+
+    function speakChoiceTarget(btnEl) {
+      if (choiceTarget) speakBritish(choiceTarget.word, btnEl);
+    }
+
+    // --- Spelling Sub-Mode ---
+    function nextSpellQuestion() {
+      stopAllAudio();
+      const pool = getActiveWordPool();
+      if (!pool.length) return;
+
+      spellLocked = false;
+      spellHintCount = 0;
+      spellTargetItem = pool[Math.floor(Math.random() * pool.length)];
+      spellWordClean = spellTargetItem.word;
+      spellMeaningClean = spellTargetItem.meaning;
+
+      document.getElementById('spellMeaningPrompt').textContent = spellMeaningClean;
+      document.getElementById('spellHintLetters').textContent = '';
+      document.getElementById('spellFeedback').classList.add('hidden');
+      document.getElementById('spellSubmitBtn').textContent = '检查拼写';
+
+      const input = document.getElementById('spellInput');
+      input.value = '';
+      input.disabled = false;
+      input.className = 'w-full text-center text-lg sm:text-xl font-mono font-bold px-4 py-4 rounded-2xl bg-ivory-50 border-2 border-ivory-200 focus:bg-white focus:border-indigoAtlas-600 focus:outline-none transition';
+
+      setTimeout(() => {
+        input.focus();
+        speakBritish(spellWordClean);
+      }, 150);
+    }
+
+    function speakSpellTarget(forceSlow, btnEl) {
+      if (spellWordClean) speakBritish(spellWordClean, btnEl, forceSlow);
+    }
+
+    function hintOneLetter() {
+      if (spellLocked || !spellWordClean) return;
+      spellHintCount = Math.min(spellHintCount + 1, spellWordClean.length);
+      let out = '';
+      for (let i = 0; i < spellWordClean.length; i++) {
+        const ch = spellWordClean[i];
+        if (ch === ' ' || ch === "'" || ch === '.' || ch === '?' || ch === '-') out += ch;
+        else if (i < spellHintCount) out += ch;
+        else out += '_';
+      }
+      document.getElementById('spellHintLetters').textContent = out;
+      document.getElementById('spellInput').focus();
+    }
+
+    function showSpellAnswer() {
+      if (spellLocked || !spellWordClean) return;
+      document.getElementById('spellInput').value = spellWordClean;
+      finishSpellCheck(false, true);
+    }
+
+    function submitSpelling(e) {
+      e.preventDefault();
+      if (!spellWordClean) return;
+      if (spellLocked) {
+        nextSpellQuestion();
+        return;
+      }
+      const val = document.getElementById('spellInput').value.trim();
+      if (!val) {
+        showToast('请先输入拼写哦', 'warn');
+        return;
+      }
+      // Strict British spelling match (case-insensitive, allows omitting trailing period/question mark)
+      const norm = s => s.toLowerCase().replace(/[.?]/g, '').replace(/\s+/g, ' ').trim();
+      finishSpellCheck(norm(val) === norm(spellWordClean), false);
+    }
+
+    function finishSpellCheck(isRight, revealed) {
+      spellLocked = true;
+      spellTotal++;
+      const input = document.getElementById('spellInput');
+      input.disabled = true;
+
+      const title = document.getElementById('spellFeedbackTitle');
+      if (isRight) {
+        spellRight++;
+        spellStreak++;
+        input.className = 'w-full text-center text-lg sm:text-xl font-mono font-bold px-4 py-4 rounded-2xl bg-emerald-50 border-2 border-emerald-500 text-emerald-800';
+        title.innerHTML = `<span class="text-emerald-700">🎉 拼写完全正确！</span>`;
+      } else {
+        spellStreak = 0;
+        addWordToMistakes(spellTargetItem.id);
+        input.className = 'w-full text-center text-lg sm:text-xl font-mono font-bold px-4 py-4 rounded-2xl bg-red-50 border-2 border-red-400 text-red-700';
+        title.innerHTML = revealed
+          ? `<span class="text-terracotta-700">已显示正确答案，并收入错题本。</span>`
+          : `<span class="text-red-600">😅 拼写有一点小偏差（注意英式拼写），已自动加入错题本。</span>`;
+      }
+
+      const acc = Math.round((spellRight / spellTotal) * 100);
+      document.getElementById('spellStats').textContent = `连对 ${spellStreak} 题 · 正确率 ${acc}%`;
+      document.getElementById('spellCorrectDisplay').textContent = spellWordClean;
+      document.getElementById('spellExampleDisplay').textContent = spellTargetItem.example || '';
+      document.getElementById('spellFeedback').classList.remove('hidden');
+      document.getElementById('spellSubmitBtn').textContent = '下一个听写 →';
+    }
+
+    function addWordToMistakes(wordId) {
+      const exists = getAllTextbookWords().some(w => w.id === wordId);
+      if (!exists) return;
+      if (!state.mistakeIds.includes(wordId)) state.mistakeIds.push(wordId);
+      state.masteredIds = state.masteredIds.filter(id => id !== wordId);
+      saveState();
+      updateGlobalStats();
+      if (!state.specialPool) renderUnitHeader();
+    }
+
+    /**
+     * =========================================================================
+     * 9. TAB 4: UNIT CHECKLIST
+     * =========================================================================
+     */
+    function renderUnitChecklist() {
+      const u = UNITS.find(x => x.id === state.selectedUnitId);
+      if (!u) return;
+
+      let done = 0;
+      const html = u.checklist.map((text, i) => {
+        const key = `${u.id}-${i}`;
+        const checked = !!state.checkedItems[key];
+        if (checked) done++;
+        return `
+          <label class="flex items-start gap-3.5 py-4 cursor-pointer select-none group">
+            <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleCheckItem('${key}', this.checked)"
+              class="mt-1 w-5 h-5 rounded-md border-ivory-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer shrink-0" />
+            <span class="text-sm sm:text-base leading-relaxed transition ${checked ? 'line-through text-ink-400' : 'text-ink-800 group-hover:text-ink-900'}">
+              ${escapeHtml(text)}
+            </span>
+          </label>
+        `;
+      }).join('');
+
+      document.getElementById('unitChecklistItems').innerHTML = html;
+      document.getElementById('unitChecklistProgress').textContent = `已完成 ${done} / ${u.checklist.length}`;
+    }
+
+    function toggleCheckItem(key, isChecked) {
+      if (isChecked) state.checkedItems[key] = true;
+      else delete state.checkedItems[key];
+      saveState();
+      renderUnitChecklist();
+      updateGlobalStats();
+      if (isChecked) showToast('打卡成功！继续加油 👍', 'success');
+    }
+
+    /**
+     * =========================================================================
+     * 10. FULL-BOOK REVIEW, MISTAKE BOOK & SPECIAL PRACTICE
+     * =========================================================================
+     */
+    function renderFullBookReview() {
+      document.getElementById('corePhrasesGrid').innerHTML = CORE_PHRASE_GROUPS.map(g => `
+        <div class="p-4 rounded-2xl bg-ivory-50 border border-ivory-200 flex flex-col justify-between gap-3">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-1.5">
+              <span class="text-xs font-bold text-terracotta-700">${escapeHtml(g.title)}</span>
+              <button onclick="speakBritish('${escapeJs(g.text)}', this)" class="px-3 py-1 rounded-lg bg-white border border-ivory-200 hover:border-indigoAtlas-500 text-indigoAtlas-700 text-xs font-bold transition">
+                🔊 朗读
+              </button>
+            </div>
+            <p class="font-serif text-sm sm:text-base font-bold text-ink-900 leading-relaxed">${escapeHtml(g.text)}</p>
+          </div>
+          <p class="text-xs text-ink-500">${escapeHtml(g.note)}</p>
+        </div>
+      `).join('');
+
+      document.getElementById('fullBookTableBody').innerHTML = UNITS.map(u => `
+        <tr onclick="selectUnit('${u.id}')" class="hover:bg-ivory-50 cursor-pointer transition">
+          <td class="py-3.5 px-3 font-bold text-indigoAtlas-700 whitespace-nowrap">${escapeHtml(u.title)}</td>
+          <td class="py-3.5 px-3 text-ink-700">${escapeHtml(u.task)}</td>
+          <td class="py-3.5 px-3 font-medium text-ink-900">${escapeHtml(u.canSay)}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderMistakeBook() {
+      const set = new Set(state.mistakeIds);
+      const list = getAllTextbookWords().filter(w => set.has(w.id));
+      const has = list.length > 0;
+
+      ['btnMistakeFlashcard', 'btnMistakeQuiz', 'btnMistakeClear'].forEach(id => {
+        const b = document.getElementById(id);
+        b.disabled = !has;
+        b.classList.toggle('opacity-40', !has);
+        b.classList.toggle('cursor-not-allowed', !has);
+      });
+
+      document.getElementById('mistakeEmptyBox').classList.toggle('hidden', has);
+      document.getElementById('mistakeItemsList').innerHTML = list.map(w => `
+        <div class="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="font-serif text-lg font-bold text-ink-900">${escapeHtml(w.word)}</span>
+              <span class="px-2 py-0.5 rounded-md bg-ivory-100 text-ink-500 text-[11px] font-semibold">${escapeHtml(w.unitTitle)}</span>
+            </div>
+            <p class="text-sm font-medium text-ink-700 mt-0.5">${escapeHtml(w.meaning)}</p>
+            <p class="text-xs text-ink-500 mt-0.5">${escapeHtml(w.example || '')}</p>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button onclick="speakBritish('${escapeJs(w.word)}', this)" class="px-3 py-1.5 rounded-xl bg-ivory-100 hover:bg-indigoAtlas-50 text-indigoAtlas-700 text-xs font-bold transition">
+              🔊 朗读
+            </button>
+            <button onclick="removeMistakeWord('${w.id}')" class="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-bold transition">
+              已掌握，移出
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function removeMistakeWord(wordId) {
+      state.mistakeIds = state.mistakeIds.filter(id => id !== wordId);
+      if (!state.masteredIds.includes(wordId)) state.masteredIds.push(wordId);
+      saveState();
+      updateGlobalStats();
+      renderMistakeBook();
+      showToast('已移出错题本并标记掌握！', 'success');
+    }
+
+    function askClearMistakes() {
+      if (!state.mistakeIds.length) return;
+      openConfirm('清空错题本', '确定要清空所有错题记录吗？', () => {
+        state.mistakeIds = [];
+        saveState();
+        updateGlobalStats();
+        renderMistakeBook();
+        showToast('错题本已清空', 'info');
+      });
+    }
+
+    function startSpecialPractice(poolType, targetTab) {
+      stopAllAudio();
+      if (poolType === 'mistakes' && !state.mistakeIds.length) return;
+      state.specialPool = poolType;
+
+      const labels = {
+        'mistakes': '📌 正在进行：错题本专项复习',
+        'core-phrases': '⭐ 正在进行：全册核心短语专项复习',
+        'all-book': '📚 正在进行：全册（Starter–Unit 10）综合复习'
+      };
+      document.getElementById('specialPracticeLabel').textContent = labels[poolType] || '专项复习';
+      document.getElementById('specialPracticeBanner').classList.remove('hidden');
+
+      document.getElementById('reviewWorkspace').classList.add('hidden');
+      document.getElementById('mistakeWorkspace').classList.add('hidden');
+      document.getElementById('unitWorkspace').classList.remove('hidden');
+
+      document.getElementById('unitPageBadge').textContent = '专项模式';
+      document.getElementById('unitProgressBadge').textContent = `共 ${getActiveWordPool().length} 个词条`;
+      document.getElementById('unitTitle').textContent = labels[poolType].replace(/^.+：/, '');
+      document.getElementById('unitTaskSubtitle').textContent = '专注巩固重点词汇与短语，加油！';
+
+      ['utab-guide', 'utab-checklist'].forEach(id => document.getElementById(id).classList.add('hidden'));
+
+      renderNavigation();
+      switchUnitTab(targetTab);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function exitSpecialPractice() {
+      const backTo = state.specialPool === 'mistakes' ? '__MISTAKES__' : '__REVIEW__';
+      selectUnit(backTo);
+    }
+
+    /**
+     * =========================================================================
+     * 11. MODAL, TOAST & UTILITIES
+     * =========================================================================
+     */
+    function openConfirm(title, desc, cb) {
+      document.getElementById('confirmTitle').textContent = title;
+      document.getElementById('confirmDesc').textContent = desc;
+      pendingConfirmCb = cb;
+      document.getElementById('confirmModal').classList.remove('hidden');
+    }
+
+    function closeConfirm() {
+      document.getElementById('confirmModal').classList.add('hidden');
+      pendingConfirmCb = null;
+    }
+
+    document.getElementById('confirmOkBtn').addEventListener('click', () => {
+      if (typeof pendingConfirmCb === 'function') pendingConfirmCb();
+      closeConfirm();
+    });
+
+    function showToast(msg, type = 'info') {
+      const box = document.getElementById('toastBox');
+      const el = document.createElement('div');
+      const cls = {
+        success: 'bg-emerald-700 text-white',
+        warn: 'bg-terracotta-600 text-white',
+        info: 'bg-ink-900 text-ivory-50'
+      };
+      el.className = `px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold shadow-paper-lg ${cls[type] || cls.info} animate-fade-up`;
+      el.textContent = msg;
+      box.appendChild(el);
+      setTimeout(() => {
+        el.style.opacity = '0';
+        el.style.transition = 'opacity 0.25s ease';
+        setTimeout(() => el.remove(), 260);
+      }, 2200);
+    }
+
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function escapeHtml(s) {
+      return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function escapeJs(s) {
+      return String(s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    }
+
+    /**
+     * =========================================================================
+     * 12. KEYBOARD SHORTCUTS & BOOT
+     * =========================================================================
+     */
+    document.addEventListener('keydown', (e) => {
+      const tag = document.activeElement?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      if (!document.getElementById('unitWorkspace').classList.contains('hidden') && state.unitTab === 'flashcard') {
+        if (e.code === 'Space') { e.preventDefault(); flipFlashcard(); }
+        else if (e.code === 'ArrowRight') { e.preventDefault(); nextFlashcard(); }
+        else if (e.code === 'ArrowLeft') { e.preventDefault(); prevFlashcard(); }
+      }
+    });
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.addEventListener('voiceschanged', refreshVoiceSelector);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      refreshVoiceSelector();
+      updateSpeedButtons();
+      renderTimer();
+      updateGlobalStats();
+      selectUnit(state.selectedUnitId || 'starter');
+    });
+  </script>
+</body>
+</html>
