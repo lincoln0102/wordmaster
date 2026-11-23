@@ -1,0 +1,1936 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <title>英语4A 小岛大冒险 · 单词闯关与贴纸盲盒</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ocean: { 50: '#F0F9FF', 100: '#E0F2FE', 200: '#BAE6FD', 500: '#0EA5E9', 600: '#0284C7' },
+            sand: { 50: '#FFFDF7', 100: '#FEF7E6', 200: '#FDECC8' },
+            coral: { 400: '#FB7185', 500: '#F43F5E', 600: '#E11D48' },
+            sunny: { 400: '#FBBF24', 500: '#F59E0B', 600: '#D97706' },
+            mint: { 400: '#34D399', 500: '#10B981', 600: '#059669' },
+          },
+          fontFamily: {
+            sans: ['"Nunito"', '"PingFang SC"', '"Hiragino Sans GB"', '"Microsoft YaHei"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    body {
+      background: linear-gradient(180deg, #E0F4FF 0%, #F2FBFF 42%, #FFF9EC 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Chunky 3D Pressable Buttons */
+    .btn-3d {
+      transition: transform 0.1s ease, box-shadow 0.1s ease, filter 0.15s ease;
+    }
+    .btn-3d:active:not(:disabled) {
+      transform: translateY(4px);
+    }
+    .btn-blue {
+      background: linear-gradient(180deg, #38BDF8 0%, #0EA5E9 100%);
+      box-shadow: 0 5px 0 #0284C7;
+      color: #fff;
+    }
+    .btn-blue:active:not(:disabled) { box-shadow: 0 1px 0 #0284C7; }
+
+    .btn-sunny {
+      background: linear-gradient(180deg, #FCD34D 0%, #F59E0B 100%);
+      box-shadow: 0 5px 0 #B45309;
+      color: #451A03;
+    }
+    .btn-sunny:active:not(:disabled) { box-shadow: 0 1px 0 #B45309; }
+
+    .btn-mint {
+      background: linear-gradient(180deg, #34D399 0%, #10B981 100%);
+      box-shadow: 0 5px 0 #047857;
+      color: #fff;
+    }
+    .btn-mint:active:not(:disabled) { box-shadow: 0 1px 0 #047857; }
+
+    .btn-coral {
+      background: linear-gradient(180deg, #FB7185 0%, #F43F5E 100%);
+      box-shadow: 0 5px 0 #BE123C;
+      color: #fff;
+    }
+    .btn-coral:active:not(:disabled) { box-shadow: 0 1px 0 #BE123C; }
+
+    .btn-purple {
+      background: linear-gradient(180deg, #A78BFA 0%, #8B5CF6 100%);
+      box-shadow: 0 5px 0 #6D28D9;
+      color: #fff;
+    }
+    .btn-purple:active:not(:disabled) { box-shadow: 0 1px 0 #6D28D9; }
+
+    .btn-cream {
+      background: #FFFFFF;
+      box-shadow: 0 4px 0 #E2E8F0;
+      border: 2px solid #E2E8F0;
+      color: #334155;
+    }
+    .btn-cream:active:not(:disabled) { box-shadow: 0 1px 0 #E2E8F0; }
+
+    /* Card Soft Elevation */
+    .island-card {
+      background: #FFFDF8;
+      border: 3px solid #FFFFFF;
+      border-radius: 26px;
+      box-shadow: 0 10px 24px -6px rgba(14, 165, 233, 0.14), 0 4px 0 #E2E8F0;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .island-card:active {
+      transform: translateY(3px);
+      box-shadow: 0 4px 12px -4px rgba(14, 165, 233, 0.14), 0 1px 0 #E2E8F0;
+    }
+
+    /* 3D Flashcard Flip */
+    .perspective-1200 { perspective: 1200px; }
+    .preserve-3d {
+      transform-style: preserve-3d;
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .backface-hidden {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .rotate-y-180 { transform: rotateY(180deg); }
+
+    /* Animations */
+    @keyframes popIn {
+      0% { transform: scale(0.85); opacity: 0; }
+      70% { transform: scale(1.04); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .animate-pop { animation: popIn 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+    @keyframes gentleShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); }
+      60% { transform: translateX(-5px); }
+      80% { transform: translateX(5px); }
+    }
+    .animate-shake { animation: gentleShake 0.4s ease; }
+
+    @keyframes starPop {
+      0% { transform: scale(1); }
+      45% { transform: scale(1.38) rotate(-8deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    .animate-star-pop { animation: starPop 0.4s ease; }
+
+    @keyframes chestShake {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      15% { transform: rotate(-10deg) scale(1.06); }
+      30% { transform: rotate(10deg) scale(1.08); }
+      45% { transform: rotate(-12deg) scale(1.1); }
+      60% { transform: rotate(12deg) scale(1.12); }
+      75% { transform: rotate(-6deg) scale(1.06); }
+    }
+    .animate-chest { animation: chestShake 0.75s ease-in-out; }
+
+    @keyframes speakingPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.55); }
+      50% { box-shadow: 0 0 0 10px rgba(14, 165, 233, 0); }
+    }
+    .is-speaking { animation: speakingPulse 1.1s infinite; }
+
+    /* Confetti Canvas */
+    #confettiCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 80;
+    }
+
+    /* SSR Shimmer */
+    .ssr-glow {
+      background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 40%, #FBCFE8 75%, #DDD6FE 100%);
+      border-color: #F59E0B !important;
+    }
+  </style>
+</head>
+<body class="text-slate-800 font-sans pb-10">
+
+  <!-- Confetti Overlay -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- ==================== TOP HUD BAR ==================== -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b-2 border-sky-100 shadow-sm">
+    <div class="max-w-5xl mx-auto px-3 sm:px-5 py-2.5 flex flex-wrap items-center justify-between gap-2">
+      <!-- Left: Logo / Home Button -->
+      <button onclick="goHome()" class="flex items-center gap-2.5 text-left active:scale-95 transition">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-500 text-white flex items-center justify-center text-2xl shadow-md">
+          🏝️
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-extrabold text-slate-800 leading-tight">英语4A 小岛大冒险</h1>
+          <p class="text-[11px] font-semibold text-sky-600">沪教版四年级上册 · 🇬🇧 英式发音</p>
+        </div>
+      </button>
+
+      <!-- Right: Star Bank, Blind Box, Rescue, Speed, SFX, Settings -->
+      <div class="flex flex-wrap items-center gap-2">
+        <!-- Star Bank -->
+        <div id="starBankPill" class="flex items-center gap-1.5 bg-amber-50 border-2 border-amber-300 px-3 py-1.5 rounded-2xl shadow-sm">
+          <span id="starIcon" class="text-xl leading-none">⭐</span>
+          <span id="starCount" class="text-base sm:text-lg font-black text-amber-700">0</span>
+        </div>
+
+        <!-- Sticker Blind Box Button -->
+        <button onclick="openStickerView()" class="btn-3d btn-sunny px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-extrabold flex items-center gap-1.5 min-h-[44px]">
+          <span>🎁 贴纸盲盒</span>
+          <span id="stickerBadge" class="bg-white/80 text-amber-900 px-2 py-0.5 rounded-full text-[11px] font-black">0/20</span>
+        </button>
+
+        <!-- Wrong-Word Rescue Button -->
+        <button onclick="openRescueView()" class="btn-3d btn-coral px-3 py-2 rounded-2xl text-xs sm:text-sm font-extrabold flex items-center gap-1.5 min-h-[44px]">
+          <span>👾 错题重练</span>
+          <span id="rescueBadge" class="bg-white/90 text-rose-600 px-2 py-0.5 rounded-full text-[11px] font-black">0</span>
+        </button>
+
+        <!-- Speed Toggle -->
+        <button id="speedToggleBtn" onclick="toggleSpeed()" class="btn-3d btn-cream px-3 py-2 rounded-2xl text-xs font-extrabold min-h-[44px]" title="切换英音语速">
+          🐇 正常
+        </button>
+
+        <!-- SFX Toggle -->
+        <button id="sfxToggleBtn" onclick="toggleSfx()" class="btn-3d btn-cream px-2.5 py-2 rounded-2xl text-base min-h-[44px] min-w-[44px]" title="开关游戏音效">
+          🔔
+        </button>
+
+        <!-- Parent Settings -->
+        <button onclick="openSettingsModal()" class="btn-3d btn-cream px-2.5 py-2 rounded-2xl text-base min-h-[44px] min-w-[44px]" title="家长设置">
+          ⚙️
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN CONTENT AREA ==================== -->
+  <main class="max-w-5xl mx-auto px-3 sm:px-5 pt-5">
+
+    <!-- ==================== VIEW 1: HOME ISLAND MAP ==================== -->
+    <section id="view-home" class="space-y-5 animate-pop">
+      <!-- Welcome Banner -->
+      <div class="bg-gradient-to-r from-sky-500 via-cyan-500 to-teal-400 rounded-[28px] p-5 sm:p-6 text-white shadow-lg relative overflow-hidden">
+        <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold mb-2">
+              ✨ 每天闯一关，攒星星抽课本贴纸！
+            </div>
+            <h2 class="text-xl sm:text-2xl font-black">欢迎来到 4A 英语探险群岛！</h2>
+            <p class="text-sm text-sky-50 mt-1 font-medium">选一座小岛开始挑战吧：点卡片听英音、听音夺宝、用字母积木拼单词！</p>
+          </div>
+          <div class="bg-white/20 backdrop-blur-sm rounded-2xl px-4 py-3 text-center shrink-0">
+            <div class="text-xs font-bold text-sky-100">已掌握单词</div>
+            <div class="text-2xl font-black mt-0.5"><span id="homeMasteredNum">0</span> <span class="text-sm font-bold opacity-80">/ <span id="homeTotalNum">0</span></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 11 Islands Grid -->
+      <div id="islandMapGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </section>
+
+    <!-- ==================== VIEW 2: ISLAND HUB & GAMEPLAY ==================== -->
+    <section id="view-island" class="hidden space-y-5 animate-pop">
+      <!-- Island Top Bar -->
+      <div class="bg-white rounded-[26px] border-2 border-sky-100 shadow-md p-4 sm:p-5">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <button onclick="goHome()" class="btn-3d btn-cream px-3.5 py-2.5 rounded-2xl text-sm font-extrabold min-h-[48px]">
+              ⬅️ 回地图
+            </button>
+            <div class="flex items-center gap-2.5">
+              <span id="islandEmoji" class="text-3xl sm:text-4xl">🏫</span>
+              <div>
+                <h2 id="islandTitle" class="text-lg sm:text-2xl font-black text-slate-800">Unit 1 校园探险岛</h2>
+                <p id="islandSub" class="text-xs sm:text-sm font-semibold text-slate-500">已掌握 0 / 13 词</p>
+              </div>
+            </div>
+          </div>
+          <div id="islandStarDisplay" class="text-2xl tracking-widest bg-amber-50 px-3.5 py-1.5 rounded-2xl border-2 border-amber-200">
+            ☆☆☆
+          </div>
+        </div>
+
+        <!-- 4 Mode Switcher Buttons -->
+        <div id="islandModeTabs" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-4">
+          <button id="modeBtn-flashcard" onclick="switchIslandMode('flashcard')" class="btn-3d py-3 px-2 rounded-2xl text-sm font-extrabold min-h-[52px]">
+            🃏 词卡热身
+          </button>
+          <button id="modeBtn-quiz" onclick="switchIslandMode('quiz')" class="btn-3d py-3 px-2 rounded-2xl text-sm font-extrabold min-h-[52px]">
+            🎧 听音夺宝
+          </button>
+          <button id="modeBtn-spelling" onclick="switchIslandMode('spelling')" class="btn-3d py-3 px-2 rounded-2xl text-sm font-extrabold min-h-[52px]">
+            🧩 字母积木
+          </button>
+          <button id="modeBtn-sentences" onclick="switchIslandMode('sentences')" class="btn-3d py-3 px-2 rounded-2xl text-sm font-extrabold min-h-[52px]">
+            🗣️ 句型打卡
+          </button>
+        </div>
+      </div>
+
+      <!-- MODE 1: FLASHCARDS -->
+      <div id="panel-flashcard" class="hidden max-w-2xl mx-auto space-y-4">
+        <div class="flex items-center justify-between px-1">
+          <span id="fcProgress" class="bg-white border-2 border-sky-100 px-4 py-1.5 rounded-full text-sm font-extrabold text-sky-700 shadow-sm">1 / 12</span>
+          <span id="fcMasteredTag" class="hidden bg-emerald-100 text-emerald-700 px-3.5 py-1.5 rounded-full text-xs font-extrabold">✅ 已学会</span>
+        </div>
+
+        <!-- Big Tappable 3D Card -->
+        <div class="perspective-1200 w-full">
+          <div id="fcCardInner" onclick="flipFlashcard()" class="preserve-3d relative w-full min-h-[300px] sm:min-h-[340px] cursor-pointer">
+            <!-- Front -->
+            <div class="backface-hidden absolute inset-0 bg-sand-50 rounded-[28px] border-4 border-white shadow-xl p-6 flex flex-col items-center justify-between text-center">
+              <span class="text-xs font-extrabold text-sky-500 bg-sky-50 px-3 py-1 rounded-full">点卡片翻面看中文</span>
+              <div class="my-auto py-3">
+                <div id="fcFrontEmoji" class="text-5xl sm:text-6xl mb-3">🏫</div>
+                <div id="fcFrontWord" class="text-3xl sm:text-5xl font-black text-slate-800 break-words leading-tight">school building</div>
+              </div>
+              <button type="button" id="fcSpeakBtn" onclick="event.stopPropagation(); speakCurrentFc(this)" class="btn-3d btn-blue px-6 py-3 rounded-2xl text-base font-extrabold min-h-[52px] flex items-center gap-2">
+                <span>🔊</span> 听英音读一遍
+              </button>
+            </div>
+
+            <!-- Back -->
+            <div class="backface-hidden rotate-y-180 absolute inset-0 bg-gradient-to-br from-amber-50 to-white rounded-[28px] border-4 border-amber-200 shadow-xl p-6 flex flex-col items-center justify-between text-center">
+              <span class="text-xs font-extrabold text-amber-600 bg-amber-100 px-3 py-1 rounded-full">中文意思</span>
+              <div class="my-auto py-3">
+                <div id="fcBackEmoji" class="text-5xl mb-2">🏫</div>
+                <div id="fcBackMeaning" class="text-3xl sm:text-4xl font-black text-slate-800 mb-2">教学楼</div>
+                <div id="fcBackWord" class="text-xl font-bold text-sky-600">school building</div>
+              </div>
+              <button type="button" onclick="event.stopPropagation(); speakCurrentFc(this)" class="btn-3d btn-blue px-6 py-2.5 rounded-2xl text-sm font-extrabold min-h-[48px]">
+                🔊 再听一遍
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flashcard Controls -->
+        <div class="grid grid-cols-3 gap-3">
+          <button onclick="prevFc()" class="btn-3d btn-cream py-3.5 rounded-2xl text-base font-extrabold min-h-[56px]">⬅️ 上一个</button>
+          <button id="fcLearnBtn" onclick="markFcLearned()" class="btn-3d btn-mint py-3.5 rounded-2xl text-base font-extrabold min-h-[56px]">学会了 +1⭐</button>
+          <button onclick="nextFc()" class="btn-3d btn-blue py-3.5 rounded-2xl text-base font-extrabold min-h-[56px]">下一个 ➡️</button>
+        </div>
+      </div>
+
+      <!-- MODE 2: LISTENING QUIZ (5-Question Round) -->
+      <div id="panel-quiz" class="hidden max-w-2xl mx-auto">
+        <div id="quizPlayBox" class="bg-sand-50 rounded-[28px] border-4 border-white shadow-xl p-5 sm:p-7 space-y-5">
+          <!-- Round Progress & Combo -->
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span id="quizRoundLabel" class="bg-sky-100 text-sky-700 px-3.5 py-1.5 rounded-full text-sm font-black">第 1 / 5 题</span>
+              <span id="quizComboBadge" class="hidden bg-orange-100 text-orange-600 px-3 py-1.5 rounded-full text-sm font-black">🔥 连对 2</span>
+            </div>
+            <span class="text-xs font-extrabold text-amber-600 bg-amber-50 px-3 py-1.5 rounded-full">答对 +2⭐</span>
+          </div>
+
+          <!-- Big Speaker Prompt -->
+          <div class="text-center py-3">
+            <button id="quizSpeakerBtn" onclick="playQuizAudio(this)" class="btn-3d btn-blue w-28 h-28 sm:w-32 sm:h-32 rounded-full text-5xl flex items-center justify-center mx-auto mb-3">
+              🔊
+            </button>
+            <p class="text-sm sm:text-base font-extrabold text-slate-600">仔细听英音，点选正确的中文卡片！</p>
+            <p id="quizHintWord" class="hidden text-xl font-black text-sky-600 mt-1"></p>
+          </div>
+
+          <!-- 4 Big Colorful Choice Cards -->
+          <div id="quizOptionsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
+        </div>
+
+        <!-- Round Complete Celebration -->
+        <div id="quizFinishBox" class="hidden bg-white rounded-[28px] border-4 border-amber-200 shadow-xl p-7 text-center space-y-4 animate-pop">
+          <div class="text-6xl">🏆</div>
+          <h3 class="text-2xl font-black text-slate-800">听音夺宝闯关成功！</h3>
+          <p id="quizFinishStats" class="text-base font-bold text-slate-600"></p>
+          <div class="inline-block bg-amber-50 border-2 border-amber-300 px-5 py-2.5 rounded-2xl text-lg font-black text-amber-700">
+            通关奖励 +5⭐！
+          </div>
+          <div class="flex flex-wrap justify-center gap-3 pt-2">
+            <button onclick="startQuizRound()" class="btn-3d btn-blue px-6 py-3.5 rounded-2xl text-base font-extrabold min-h-[54px]">🔄 再玩一局</button>
+            <button onclick="switchIslandMode('spelling')" class="btn-3d btn-mint px-6 py-3.5 rounded-2xl text-base font-extrabold min-h-[54px]">🧩 去玩字母积木</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODE 3: LETTER-TILE SPELLING (NO KEYBOARD!) -->
+      <div id="panel-spelling" class="hidden max-w-2xl mx-auto">
+        <div id="spellPlayBox" class="bg-sand-50 rounded-[28px] border-4 border-white shadow-xl p-5 sm:p-7 space-y-5">
+          <!-- Header -->
+          <div class="flex items-center justify-between gap-2">
+            <span id="spellRoundLabel" class="bg-emerald-100 text-emerald-700 px-3.5 py-1.5 rounded-full text-sm font-black">第 1 / 5 词</span>
+            <span class="text-xs font-extrabold text-amber-600 bg-amber-50 px-3 py-1.5 rounded-full">拼对 +3⭐</span>
+          </div>
+
+          <!-- Meaning & Audio -->
+          <div class="text-center space-y-2">
+            <div id="spellEmoji" class="text-5xl">🐼</div>
+            <h3 id="spellMeaning" class="text-2xl sm:text-3xl font-black text-slate-800">大熊猫</h3>
+            <div class="flex items-center justify-center gap-3 pt-1">
+              <button id="spellAudioBtn" onclick="playSpellAudio(this)" class="btn-3d btn-blue px-5 py-2.5 rounded-2xl text-sm font-extrabold min-h-[48px]">
+                🔊 听发音
+              </button>
+              <button onclick="useSpellHint()" class="btn-3d btn-sunny px-4 py-2.5 rounded-2xl text-sm font-extrabold min-h-[48px]">
+                💡 提示一个字母
+              </button>
+            </div>
+          </div>
+
+          <!-- Answer Slots -->
+          <div id="spellSlotsBox" class="flex flex-wrap items-center justify-center gap-2 py-3 min-h-[68px] bg-white rounded-2xl border-2 border-dashed border-sky-200 px-3"></div>
+
+          <!-- Scrambled Letter Tiles -->
+          <div id="spellTilesBox" class="flex flex-wrap items-center justify-center gap-2.5 pt-2"></div>
+
+          <!-- Clear button -->
+          <div class="flex justify-center pt-1">
+            <button onclick="resetCurrentSpellSlots()" class="text-xs font-bold text-slate-400 hover:text-slate-600 px-3 py-1.5">
+              ↺ 清空重拼这个词
+            </button>
+          </div>
+        </div>
+
+        <!-- Spelling Round Complete -->
+        <div id="spellFinishBox" class="hidden bg-white rounded-[28px] border-4 border-emerald-200 shadow-xl p-7 text-center space-y-4 animate-pop">
+          <div class="text-6xl">🎉</div>
+          <h3 class="text-2xl font-black text-slate-800">字母积木大挑战通关！</h3>
+          <p class="text-base font-bold text-slate-600">你用手指拼出了全部 5 个单词，太厉害啦！</p>
+          <div class="inline-block bg-amber-50 border-2 border-amber-300 px-5 py-2.5 rounded-2xl text-lg font-black text-amber-700">
+            通关奖励 +5⭐！
+          </div>
+          <div class="flex flex-wrap justify-center gap-3 pt-2">
+            <button onclick="startSpellingRound()" class="btn-3d btn-mint px-6 py-3.5 rounded-2xl text-base font-extrabold min-h-[54px]">🔄 再拼一局</button>
+            <button onclick="openStickerView()" class="btn-3d btn-sunny px-6 py-3.5 rounded-2xl text-base font-extrabold min-h-[54px]">🎁 去抽贴纸盲盒</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODE 4: SENTENCES & CHECKLIST -->
+      <div id="panel-sentences" class="hidden max-w-3xl mx-auto space-y-3.5">
+        <div class="bg-sky-50 border-2 border-sky-200 rounded-2xl px-4 py-3 text-sm font-bold text-sky-800 flex items-center justify-between">
+          <span>🗣️ 点击大喇叭听自然英音，大声跟读完点“我读过啦”领星星！</span>
+        </div>
+        <div id="sentencesList" class="space-y-3"></div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 3: STICKER BLIND BOX & ALBUM ==================== -->
+    <section id="view-stickers" class="hidden space-y-6 animate-pop">
+      <!-- Blind Box Draw Stage -->
+      <div class="bg-gradient-to-br from-amber-100 via-orange-50 to-rose-100 rounded-[28px] border-4 border-white shadow-xl p-6 text-center relative overflow-hidden">
+        <div class="flex justify-start mb-2">
+          <button onclick="goHome()" class="btn-3d btn-cream px-4 py-2 rounded-2xl text-sm font-extrabold min-h-[44px]">⬅️ 回地图</button>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-black text-amber-900">🎁 课本贴纸盲盒机</h2>
+        <p class="text-sm sm:text-base font-bold text-amber-800/80 mt-1">每次消耗 <strong>10 ⭐</strong>，集齐 20 张四年级上册专属贴纸！重复贴纸返还 4⭐ 幸运星。</p>
+
+        <div class="my-5 flex flex-col items-center">
+          <div id="treasureChest" class="text-7xl sm:text-8xl select-none cursor-pointer transition-transform hover:scale-105" onclick="drawBlindBox()">
+            🎁
+          </div>
+          <button id="drawBoxBtn" onclick="drawBlindBox()" class="btn-3d btn-sunny mt-4 px-8 py-4 rounded-2xl text-lg font-black min-h-[58px]">
+            ✨ 开启盲盒（消耗 10⭐）
+          </button>
+        </div>
+      </div>
+
+      <!-- Sticker Album Grid -->
+      <div class="bg-white rounded-[28px] border-2 border-sky-100 shadow-md p-5 sm:p-6">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+          <h3 class="text-lg sm:text-xl font-black text-slate-800">📖 我的课本贴纸图鉴（点击已解锁贴纸听英音）</h3>
+          <span id="albumProgressText" class="bg-amber-100 text-amber-800 px-3.5 py-1 rounded-full text-sm font-black">已收集 0 / 20</span>
+        </div>
+        <div id="stickerAlbumGrid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3"></div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 4: WRONG-WORD RESCUE ==================== -->
+    <section id="view-rescue" class="hidden space-y-5 animate-pop">
+      <div class="bg-white rounded-[28px] border-2 border-rose-100 shadow-md p-5 sm:p-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div class="flex items-center gap-3">
+            <button onclick="goHome()" class="btn-3d btn-cream px-4 py-2 rounded-2xl text-sm font-extrabold min-h-[46px]">⬅️ 回地图</button>
+            <div>
+              <h2 class="text-xl sm:text-2xl font-black text-rose-600">👾 错题小怪兽营救站</h2>
+              <p class="text-xs sm:text-sm font-semibold text-slate-500">把答错的单词重新答对，就能打败小怪兽并把它们移出列表！</p>
+            </div>
+          </div>
+          <div id="rescueActionBtns" class="flex flex-wrap gap-2">
+            <button onclick="startRescuePractice('quiz')" class="btn-3d btn-blue px-4 py-2.5 rounded-2xl text-sm font-extrabold min-h-[48px]">🎧 听音消灭怪兽</button>
+            <button onclick="startRescuePractice('spelling')" class="btn-3d btn-mint px-4 py-2.5 rounded-2xl text-sm font-extrabold min-h-[48px]">🧩 拼词消灭怪兽</button>
+          </div>
+        </div>
+
+        <div id="rescueEmpty" class="hidden py-12 text-center space-y-2">
+          <div class="text-6xl">🌟</div>
+          <h3 class="text-xl font-black text-slate-800">太棒啦！没有错题小怪兽！</h3>
+          <p class="text-sm font-semibold text-slate-500">快去小岛地图继续探险赚星星吧！</p>
+        </div>
+
+        <div id="rescueList" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== STICKER REVEAL MODAL ==================== -->
+  <div id="stickerRevealModal" class="hidden fixed inset-0 z-50 bg-slate-900/55 backdrop-blur-sm flex items-center justify-center p-4">
+    <div id="stickerRevealCard" class="bg-white rounded-[30px] border-4 border-amber-300 shadow-2xl max-w-sm w-full p-6 text-center space-y-3 animate-pop">
+      <div id="revealRarityBadge" class="inline-block px-3.5 py-1 rounded-full text-xs font-black"></div>
+      <div id="revealEmoji" class="text-7xl py-2">🐼</div>
+      <h3 id="revealCn" class="text-2xl font-black text-slate-800">四川大熊猫</h3>
+      <p id="revealEn" class="text-lg font-extrabold text-sky-600">panda</p>
+      <p id="revealDupMsg" class="hidden text-sm font-extrabold text-amber-600 bg-amber-50 py-1.5 px-3 rounded-xl"></p>
+      <div class="flex justify-center gap-3 pt-2">
+        <button onclick="speakBritish(currentRevealedSticker.en)" class="btn-3d btn-blue px-5 py-3 rounded-2xl text-sm font-extrabold min-h-[48px]">🔊 听英音</button>
+        <button onclick="closeRevealModal()" class="btn-3d btn-mint px-6 py-3 rounded-2xl text-sm font-extrabold min-h-[48px]">收进图鉴！</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PARENT SETTINGS MODAL ==================== -->
+  <div id="settingsModal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-[28px] border-2 border-sky-100 shadow-2xl max-w-sm w-full p-6 space-y-4 animate-pop">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-black text-slate-800">⚙️ 家长设置</h3>
+        <button onclick="closeSettingsModal()" class="w-9 h-9 rounded-full bg-slate-100 font-bold text-slate-500">✕</button>
+      </div>
+      <div class="bg-sky-50 rounded-2xl p-3.5 text-xs text-sky-900 leading-relaxed font-medium">
+        <strong>iPad 使用小贴士：</strong>本页面采用单实例防拦截英音引擎，建议通过网址在 Safari 打开并「添加到主屏幕」，孩子每天玩 10–15 分钟即可。
+      </div>
+      <div id="resetConfirmStep" class="pt-2 border-t border-slate-100 space-y-2">
+        <button id="btnAskReset" onclick="showResetConfirm()" class="w-full py-3 rounded-2xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-extrabold text-sm transition">
+          重置所有学习进度与贴纸
+        </button>
+        <div id="resetConfirmBtns" class="hidden space-y-2 bg-rose-50 p-3 rounded-2xl">
+          <p class="text-xs font-bold text-rose-700 text-center">确定要清空所有星星、贴纸和打卡记录吗？</p>
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="hideResetConfirm()" class="py-2 rounded-xl bg-white text-slate-600 font-bold text-xs">取消</button>
+            <button onclick="confirmResetAll()" class="py-2 rounded-xl bg-rose-500 text-white font-bold text-xs">确认清空</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TOAST CONTAINER ==================== -->
+  <div id="toastContainer" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[70] pointer-events-none flex flex-col items-center gap-2"></div>
+
+  <script>
+    /**
+     * =========================================================================
+     * 1. COMPLETE GRADE 4A CURRICULUM (11 THEMED ISLANDS, STRICT BRITISH ENGLISH)
+     * =========================================================================
+     */
+    const ISLANDS = [
+      {
+        id: 'starter', emoji: '🎒', title: 'Starter 开学准备岛', color: 'from-sky-400 to-blue-500',
+        words: [
+          { id: 'st-1', en: 'twenty', cn: '二十 (20)', emoji: '2️⃣' },
+          { id: 'st-2', en: 'thirty', cn: '三十 (30)', emoji: '3️⃣' },
+          { id: 'st-3', en: 'forty', cn: '四十 (40)', emoji: '4️⃣' },
+          { id: 'st-4', en: 'fifty', cn: '五十 (50)', emoji: '5️⃣' },
+          { id: 'st-5', en: 'sixty', cn: '六十 (60)', emoji: '6️⃣' },
+          { id: 'st-6', en: 'seventy', cn: '七十 (70)', emoji: '7️⃣' },
+          { id: 'st-7', en: 'eighty', cn: '八十 (80)', emoji: '8️⃣' },
+          { id: 'st-8', en: 'ninety', cn: '九十 (90)', emoji: '9️⃣' },
+          { id: 'st-9', en: 'one hundred', cn: '一百 (100)', emoji: '💯' },
+          { id: 'st-10', en: 'Monday', cn: '星期一', emoji: '📅' },
+          { id: 'st-11', en: 'Tuesday', cn: '星期二', emoji: '📅' },
+          { id: 'st-12', en: 'Wednesday', cn: '星期三', emoji: '📅' },
+          { id: 'st-13', en: 'Thursday', cn: '星期四', emoji: '📅' },
+          { id: 'st-14', en: 'Friday', cn: '星期五', emoji: '📅' },
+          { id: 'st-15', en: 'Saturday', cn: '星期六', emoji: '🎈' },
+          { id: 'st-16', en: 'Sunday', cn: '星期日', emoji: '☀️' },
+          { id: 'st-17', en: 'quiet', cn: '安静的', emoji: '🤫' },
+          { id: 'st-18', en: 'pencil', cn: '铅笔', emoji: '✏️' },
+          { id: 'st-19', en: 'partner', cn: '搭档，同伴', emoji: '🤝' },
+          { id: 'st-20', en: 'spell', cn: '拼写', emoji: '🔤' },
+          { id: 'st-21', en: 'afraid', cn: '害怕的', emoji: '😨' },
+          { id: 'st-22', en: 'plan', cn: '计划', emoji: '📝' }
+        ],
+        sentences: [
+          'Please be quiet.',
+          'May I use your red pencil? Here you are.',
+          'How do you spell book? B-O-O-K.',
+          "Don't be afraid. Have a try.",
+          'This is my plan for English study.'
+        ]
+      },
+      {
+        id: 'unit1', emoji: '🏫', title: 'Unit 1 校园探险岛', color: 'from-indigo-400 to-sky-500',
+        words: [
+          { id: 'u1-1', en: 'school building', cn: '教学楼', emoji: '🏫' },
+          { id: 'u1-2', en: 'library', cn: '图书馆', emoji: '📚' },
+          { id: 'u1-3', en: 'classroom', cn: '教室', emoji: '🪑' },
+          { id: 'u1-4', en: 'hall', cn: '礼堂', emoji: '🎭' },
+          { id: 'u1-5', en: 'computer room', cn: '计算机机房', emoji: '💻' },
+          { id: 'u1-6', en: 'sports field', cn: '运动场', emoji: '🏟️' },
+          { id: 'u1-7', en: 'art room', cn: '美术教室', emoji: '🎨' },
+          { id: 'u1-8', en: 'keep tidy', cn: '保持整洁', emoji: '🧹' },
+          { id: 'u1-9', en: 'ground floor', cn: '一楼（英式）', emoji: '1️⃣' },
+          { id: 'u1-10', en: 'first floor', cn: '二楼（英式）', emoji: '2️⃣' },
+          { id: 'u1-11', en: 'second floor', cn: '三楼（英式）', emoji: '3️⃣' },
+          { id: 'u1-12', en: 'see you soon', cn: '回头见', emoji: '👋' },
+          { id: 'u1-13', en: 'bamboo', cn: '竹子', emoji: '🎋' }
+        ],
+        sentences: [
+          'What place do you like in our school? I like the sports field.',
+          "Where is James? He's in the library.",
+          'Shall we meet in the classroom? How about the computer room?',
+          'The classroom has no computers.'
+        ]
+      },
+      {
+        id: 'unit2', emoji: '🤝', title: 'Unit 2 同学猜猜岛', color: 'from-violet-400 to-purple-500',
+        words: [
+          { id: 'u2-1', en: 'helpful', cn: '乐于助人的', emoji: '🤝' },
+          { id: 'u2-2', en: 'interesting', cn: '有趣的', emoji: '🤩' },
+          { id: 'u2-3', en: 'lovely', cn: '可爱的', emoji: '🥰' },
+          { id: 'u2-4', en: 'different', cn: '不同的', emoji: '🌈' },
+          { id: 'u2-5', en: 'great', cn: '极好的', emoji: '👍' },
+          { id: 'u2-6', en: 'often', cn: '经常', emoji: '🔁' },
+          { id: 'u2-7', en: 'always', cn: '总是', emoji: '⭐' },
+          { id: 'u2-8', en: 'writer', cn: '作家', emoji: '✍️' },
+          { id: 'u2-9', en: 'painter', cn: '画家', emoji: '🎨' },
+          { id: 'u2-10', en: 'football', cn: '足球', emoji: '⚽' },
+          { id: 'u2-11', en: 'basketball', cn: '篮球', emoji: '🏀' },
+          { id: 'u2-12', en: 'excited', cn: '兴奋的', emoji: '😆' }
+        ],
+        sentences: [
+          'Who is he? He is helpful. He always helps teachers.',
+          'Shenshen wants to be a writer.',
+          'Minmin is good at football.',
+          'You can do it. Take it easy. Keep going.'
+        ]
+      },
+      {
+        id: 'unit3', emoji: '🐼', title: 'Unit 3 动物家园岛', color: 'from-emerald-400 to-teal-500',
+        words: [
+          { id: 'u3-1', en: 'panda', cn: '大熊猫', emoji: '🐼' },
+          { id: 'u3-2', en: 'monkey', cn: '猴子', emoji: '🐒' },
+          { id: 'u3-3', en: 'elephant', cn: '大象', emoji: '🐘' },
+          { id: 'u3-4', en: 'baby elephant', cn: '小象', emoji: '🐘' },
+          { id: 'u3-5', en: 'polar bear', cn: '北极熊', emoji: '🐻‍❄️' },
+          { id: 'u3-6', en: 'family', cn: '一家人', emoji: '👨‍👩‍👧‍👦' },
+          { id: 'u3-7', en: 'hometown', cn: '家乡', emoji: '🏡' },
+          { id: 'u3-8', en: 'grey', cn: '灰色的（英式）', emoji: '🩶' },
+          { id: 'u3-9', en: 'trunk', cn: '象鼻', emoji: '🐘' },
+          { id: 'u3-10', en: 'tail', cn: '尾巴', emoji: '🐒' },
+          { id: 'u3-11', en: 'kind', cn: '友善的', emoji: '💛' },
+          { id: 'u3-12', en: 'river', cn: '河流', emoji: '🏞️' },
+          { id: 'u3-13', en: 'the North Pole', cn: '北极', emoji: '❄️' }
+        ],
+        sentences: [
+          'Where are you from? We are from Sichuan.',
+          'Pandas are black and white.',
+          'Look, the elephant family are playing in the river.',
+          'Why do they live there? Because they like climbing trees.'
+        ]
+      },
+      {
+        id: 'unit4', emoji: '🎂', title: 'Unit 4 生日派对岛', color: 'from-pink-400 to-rose-500',
+        words: [
+          { id: 'u4-1', en: 'invitation', cn: '邀请函', emoji: '💌' },
+          { id: 'u4-2', en: 'party', cn: '聚会', emoji: '🥳' },
+          { id: 'u4-3', en: 'activity', cn: '活动', emoji: '🎪' },
+          { id: 'u4-4', en: 'share a cake', cn: '分享蛋糕', emoji: '🎂' },
+          { id: 'u4-5', en: 'letter', cn: '信', emoji: '✉️' },
+          { id: 'u4-6', en: 'noodles', cn: '面条', emoji: '🍜' },
+          { id: 'u4-7', en: 'egg', cn: '鸡蛋', emoji: '🥚' },
+          { id: 'u4-8', en: 'bring', cn: '带来', emoji: '🎁' },
+          { id: 'u4-9', en: 'tradition', cn: '传统', emoji: '🏮' },
+          { id: 'u4-10', en: 'wish', cn: '祝愿', emoji: '🌠' },
+          { id: 'u4-11', en: 'soup', cn: '汤', emoji: '🍲' },
+          { id: 'u4-12', en: 'bowl', cn: '碗', emoji: '🥣' }
+        ],
+        sentences: [
+          'We invite you to our birthday party.',
+          "It's a tradition to read parents' letters at our group birthday party.",
+          "It's a tradition to have a bowl of noodles on my birthday.",
+          'Thank you for all the time you spend with me. I love you!'
+        ]
+      },
+      {
+        id: 'unit5', emoji: '🌉', title: 'Unit 5 水乡漫游岛', color: 'from-cyan-400 to-blue-500',
+        words: [
+          { id: 'u5-1', en: 'neighbourhood', cn: '社区（英式）', emoji: '🏘️' },
+          { id: 'u5-2', en: 'bridge', cn: '桥', emoji: '🌉' },
+          { id: 'u5-3', en: 'museum', cn: '博物馆', emoji: '🏛️' },
+          { id: 'u5-4', en: 'park', cn: '公园', emoji: '🌳' },
+          { id: 'u5-5', en: 'shop', cn: '商店', emoji: '🏪' },
+          { id: 'u5-6', en: 'supermarket', cn: '超市', emoji: '🛒' },
+          { id: 'u5-7', en: 'cinema', cn: '电影院', emoji: '🎬' },
+          { id: 'u5-8', en: 'gondola', cn: '贡多拉小船', emoji: '🚣' },
+          { id: 'u5-9', en: 'Italy', cn: '意大利', emoji: '🇮🇹' },
+          { id: 'u5-10', en: 'amazing', cn: '令人惊叹的', emoji: '✨' },
+          { id: 'u5-11', en: 'out of battery', cn: '电池没电了', emoji: '🪫' }
+        ],
+        sentences: [
+          'There is a museum. There are many bridges.',
+          'Is there a museum? Yes, there is.',
+          "Are there any bridges? No, there aren't.",
+          "That's amazing."
+        ]
+      },
+      {
+        id: 'unit6', emoji: '🍁', title: 'Unit 6 金秋落叶岛', color: 'from-amber-400 to-orange-500',
+        words: [
+          { id: 'u6-1', en: 'autumn', cn: '秋天', emoji: '🍁' },
+          { id: 'u6-2', en: 'farm', cn: '农场', emoji: '🚜' },
+          { id: 'u6-3', en: 'fruit', cn: '水果', emoji: '🍇' },
+          { id: 'u6-4', en: 'apple', cn: '苹果', emoji: '🍎' },
+          { id: 'u6-5', en: 'leaf', cn: '叶子（单数）', emoji: '🍂' },
+          { id: 'u6-6', en: 'leaves', cn: '叶子（复数）', emoji: '🍁' },
+          { id: 'u6-7', en: 'fly south', cn: '南飞', emoji: '🕊️' },
+          { id: 'u6-8', en: 'golden', cn: '金色的', emoji: '🌟' },
+          { id: 'u6-9', en: 'colourful', cn: '五彩缤纷的（英式）', emoji: '🎨' },
+          { id: 'u6-10', en: 'yummy', cn: '美味的', emoji: '😋' },
+          { id: 'u6-11', en: 'yellow', cn: '黄色的', emoji: '💛' }
+        ],
+        sentences: [
+          'Autumn is my favourite season.',
+          'I like collecting colourful leaves.',
+          'I like picking fruit on the farm.',
+          'Look, a falling leaf! Oh, how beautiful!'
+        ]
+      },
+      {
+        id: 'unit7', emoji: '🥟', title: 'Unit 7 营养早餐岛', color: 'from-orange-400 to-amber-500',
+        words: [
+          { id: 'u7-1', en: 'breakfast', cn: '早餐', emoji: '🍳' },
+          { id: 'u7-2', en: 'menu', cn: '菜单', emoji: '📋' },
+          { id: 'u7-3', en: 'juice', cn: '果汁', emoji: '🧃' },
+          { id: 'u7-4', en: 'milk', cn: '牛奶', emoji: '🥛' },
+          { id: 'u7-5', en: 'soya milk', cn: '豆浆（英式）', emoji: '🥛' },
+          { id: 'u7-6', en: 'banana', cn: '香蕉', emoji: '🍌' },
+          { id: 'u7-7', en: 'bread', cn: '面包', emoji: '🍞' },
+          { id: 'u7-8', en: 'baozi', cn: '包子', emoji: '🥟' },
+          { id: 'u7-9', en: 'jiaozi', cn: '饺子', emoji: '🥟' },
+          { id: 'u7-10', en: 'shaomai', cn: '烧卖', emoji: '🥡' },
+          { id: 'u7-11', en: 'sandwich', cn: '三明治', emoji: '🥪' },
+          { id: 'u7-12', en: 'energy', cn: '能量', emoji: '⚡' },
+          { id: 'u7-13', en: 'protein', cn: '蛋白质', emoji: '💪' },
+          { id: 'u7-14', en: 'vitamin', cn: '维生素', emoji: '🍊' }
+        ],
+        sentences: [
+          'I like eating baozi and drinking soya milk for breakfast.',
+          'How often do you have milk? Every day.',
+          'Once a week. Twice a week. Three times a week.',
+          'Breakfast gives me energy.'
+        ]
+      },
+      {
+        id: 'unit8', emoji: '🪴', title: 'Unit 8 诚实花盆岛', color: 'from-lime-400 to-emerald-500',
+        words: [
+          { id: 'u8-1', en: 'honest', cn: '诚实的', emoji: '💖' },
+          { id: 'u8-2', en: "keep one's word", cn: '守信用', emoji: '🤙' },
+          { id: 'u8-3', en: 'tell the truth', cn: '讲实话', emoji: '🗣️' },
+          { id: 'u8-4', en: 'never tell a lie', cn: '从不说谎', emoji: '🛡️' },
+          { id: 'u8-5', en: 'give back', cn: '归还', emoji: '🤲' },
+          { id: 'u8-6', en: 'on time', cn: '准时', emoji: '⌚' },
+          { id: 'u8-7', en: 'happened', cn: '发生（过去式）', emoji: '❓' },
+          { id: 'u8-8', en: 'empty pot', cn: '空花盆', emoji: '🪴' }
+        ],
+        sentences: [
+          'We should be honest every day.',
+          'She always tells the truth and keeps her word.',
+          'What happened? Are you all right?'
+        ]
+      },
+      {
+        id: 'unit9', emoji: '⏰', title: 'Unit 9 时间魔法岛', color: 'from-fuchsia-400 to-purple-500',
+        words: [
+          { id: 'u9-1', en: 'time', cn: '时间', emoji: '⏳' },
+          { id: 'u9-2', en: 'hour hand', cn: '时针', emoji: '🕐' },
+          { id: 'u9-3', en: 'minute hand', cn: '分针', emoji: '🕑' },
+          { id: 'u9-4', en: "seven o'clock", cn: '七点整', emoji: '🕖' },
+          { id: 'u9-5', en: 'half past eleven', cn: '十一点半', emoji: '🕦' },
+          { id: 'u9-6', en: 'ten to four', cn: '差十分四点', emoji: '🕓' },
+          { id: 'u9-7', en: 'morning', cn: '上午，早晨', emoji: '🌅' },
+          { id: 'u9-8', en: 'evening', cn: '晚上，傍晚', emoji: '🌇' },
+          { id: 'u9-9', en: 'night', cn: '夜晚', emoji: '🌃' },
+          { id: 'u9-10', en: 'the Earth', cn: '地球', emoji: '🌍' },
+          { id: 'u9-11', en: 'the moon', cn: '月亮', emoji: '🌙' },
+          { id: 'u9-12', en: 'question', cn: '问题', emoji: '❓' }
+        ],
+        sentences: [
+          "What time is it? It's seven o'clock.",
+          "It's half past eleven.",
+          "It's ten to four.",
+          'Happy New Year!'
+        ]
+      },
+      {
+        id: 'unit10', emoji: '⛅', title: 'Unit 10 天气预报岛', color: 'from-sky-400 to-cyan-500',
+        words: [
+          { id: 'u10-1', en: 'weather', cn: '天气', emoji: '⛅' },
+          { id: 'u10-2', en: 'weather report', cn: '天气预报', emoji: '📺' },
+          { id: 'u10-3', en: 'sunny', cn: '晴朗的', emoji: '☀️' },
+          { id: 'u10-4', en: 'cloudy', cn: '多云的', emoji: '☁️' },
+          { id: 'u10-5', en: 'windy', cn: '有风的', emoji: '💨' },
+          { id: 'u10-6', en: 'rainy', cn: '下雨的', emoji: '🌧️' },
+          { id: 'u10-7', en: 'snowy', cn: '下雪的', emoji: '❄️' },
+          { id: 'u10-8', en: 'degree', cn: '摄氏度', emoji: '🌡️' },
+          { id: 'u10-9', en: 'umbrella', cn: '雨伞', emoji: '☔' },
+          { id: 'u10-10', en: 'warm', cn: '温暖的', emoji: '🌤️' },
+          { id: 'u10-11', en: 'cold', cn: '寒冷的', emoji: '🧣' }
+        ],
+        sentences: [
+          "How's the weather in Shanghai today?",
+          "It's cold and rainy. It's five degrees.",
+          "It's warm and sunny. It's 23 degrees.",
+          'Take your umbrella.'
+        ]
+      }
+    ];
+
+    /**
+     * 20 COLLECTIBLE TEXTBOOK STICKERS
+     */
+    const STICKERS = [
+      { id: 'sk-1', emoji: '🐼', cn: '四川大熊猫', en: 'panda', rarity: 'SSR' },
+      { id: 'sk-2', emoji: '🐻‍❄️', cn: '北极熊', en: 'polar bear', rarity: 'SSR' },
+      { id: 'sk-3', emoji: '🎋', cn: '竹子学校', en: 'bamboo school', rarity: '稀有' },
+      { id: 'sk-4', emoji: '🚣', cn: '威尼斯贡多拉', en: 'gondola', rarity: 'SSR' },
+      { id: 'sk-5', emoji: '🍜', cn: '生日长寿面', en: 'birthday noodles', rarity: '稀有' },
+      { id: 'sk-6', emoji: '🍁', cn: '金秋枫叶', en: 'golden leaf', rarity: '普通' },
+      { id: 'sk-7', emoji: '🥟', cn: '热腾腾包子', en: 'baozi', rarity: '普通' },
+      { id: 'sk-8', emoji: '🥛', cn: '香浓豆浆', en: 'soya milk', rarity: '普通' },
+      { id: 'sk-9', emoji: '🪴', cn: '诚实空花盆', en: 'empty pot', rarity: '稀有' },
+      { id: 'sk-10', emoji: '⏰', cn: '魔法小闹钟', en: 'clock', rarity: '普通' },
+      { id: 'sk-11', emoji: '☀️', cn: '晴天太阳公公', en: 'sunny', rarity: '普通' },
+      { id: 'sk-12', emoji: '☔', cn: '雨天小伞', en: 'umbrella', rarity: '普通' },
+      { id: 'sk-13', emoji: '🐘', cn: '云南小象', en: 'baby elephant', rarity: '稀有' },
+      { id: 'sk-14', emoji: '🐒', cn: '贵州小猴', en: 'monkey', rarity: '普通' },
+      { id: 'sk-15', emoji: '🎂', cn: '集体生日蛋糕', en: 'birthday cake', rarity: '稀有' },
+      { id: 'sk-16', emoji: '🏛️', cn: '社区博物馆', en: 'museum', rarity: '普通' },
+      { id: 'sk-17', emoji: '🏀', cn: '校园运动场', en: 'sports field', rarity: '普通' },
+      { id: 'sk-18', emoji: '📚', cn: '图书馆小书虫', en: 'library', rarity: '普通' },
+      { id: 'sk-19', emoji: '✍️', cn: '小小作家', en: 'writer', rarity: '稀有' },
+      { id: 'sk-20', emoji: '🌈', cn: '彩虹天气预报员', en: 'weather report', rarity: 'SSR' }
+    ];
+
+    /**
+     * =========================================================================
+     * 2. STATE & LOCALSTORAGE PERSISTENCE
+     * =========================================================================
+     */
+    const STORAGE_KEY = 'shanghai_4a_island_adventure_v1';
+
+    let state = {
+      stars: 10, // Give 10 starter stars so child can test or earn quickly!
+      speedMode: 'normal', // 'normal' (0.95) | 'slow' (0.72)
+      sfxEnabled: true,
+      masteredIds: [],
+      wrongIds: [],
+      checkedSentences: {},
+      collectedStickers: [],
+      islandStars: {} // islandId -> 0..3
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) state = { ...state, ...JSON.parse(raw) };
+      } catch (e) { console.warn('Load failed', e); }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) { console.warn('Save failed', e); }
+    }
+
+    /**
+     * =========================================================================
+     * 3. iPad SAFARI-SAFE SINGLE-INSTANCE AUDIO ENGINE + WEB AUDIO SFX
+     * =========================================================================
+     */
+    const player = new Audio();
+    player.preload = 'auto';
+
+    let audioUnlocked = false;
+    let speechSessionId = 0;
+    let speechGapTimer = null;
+    let activeSpeakBtn = null;
+    let audioCtx = null;
+
+    function unlockAudioOnFirstTap() {
+      if (audioUnlocked) return;
+      audioUnlocked = true;
+      try {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (Ctx && !audioCtx) audioCtx = new Ctx();
+        if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      } catch (_) {}
+      // Unlock HTMLAudioElement silently on iOS/iPadOS
+      try {
+        player.muted = true;
+        player.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
+        const p = player.play();
+        if (p && p.then) p.then(() => { player.pause(); player.muted = false; }).catch(() => { player.muted = false; });
+        else player.muted = false;
+      } catch (_) { player.muted = false; }
+    }
+    document.addEventListener('touchstart', unlockAudioOnFirstTap, { passive: true });
+    document.addEventListener('click', unlockAudioOnFirstTap, { passive: true });
+
+    // Synthesized Game Sound Effects (Zero external files, instant on iPad)
+    function playSfx(type) {
+      if (!state.sfxEnabled) return;
+      try {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return;
+        if (!audioCtx) audioCtx = new Ctx();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const now = audioCtx.currentTime;
+        if (type === 'correct') {
+          // Cheerful coin chime
+          [587.33, 880].forEach((freq, i) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + i * 0.08);
+            gain.gain.setValueAtTime(0.18, now + i * 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.22);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(now + i * 0.08); osc.stop(now + i * 0.08 + 0.24);
+          });
+        } else if (type === 'wrong') {
+          // Gentle soft boing
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(280, now);
+          osc.frequency.exponentialRampToValueAtTime(190, now + 0.18);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+          osc.connect(gain); gain.connect(audioCtx.destination);
+          osc.start(now); osc.stop(now + 0.24);
+        } else if (type === 'fanfare') {
+          // Celebratory fanfare
+          [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + i * 0.1);
+            gain.gain.setValueAtTime(0.2, now + i * 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.35);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(now + i * 0.1); osc.stop(now + i * 0.1 + 0.38);
+          });
+        } else if (type === 'tap') {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(480, now);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+          osc.connect(gain); gain.connect(audioCtx.destination);
+          osc.start(now); osc.stop(now + 0.07);
+        }
+      } catch (_) {}
+    }
+
+    function stopSpeech() {
+      speechSessionId++;
+      if (speechGapTimer) { clearTimeout(speechGapTimer); speechGapTimer = null; }
+      player.onended = null;
+      player.onerror = null;
+      player.onplaying = null;
+      try { player.pause(); } catch (_) {}
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch (_) {}
+      }
+      if (activeSpeakBtn) {
+        activeSpeakBtn.classList.remove('is-speaking');
+        activeSpeakBtn = null;
+      }
+    }
+
+    function splitSpeechSegments(raw) {
+      if (!raw) return [];
+      const cleaned = String(raw)
+        .replace(/（[^）]*）/g, '')
+        .replace(/\([^)]*\)/g, '')
+        .replace(/…|\.{3,}/g, ' ')
+        .trim();
+      return cleaned.split(/\s*(?:\/|=)\s*/).map(s => s.trim()).filter(Boolean);
+    }
+
+    function playSingleSegmentOnline(text, rate, sid) {
+      return new Promise((resolve) => {
+        if (sid !== speechSessionId) return resolve();
+        let settled = false;
+        const done = (fallback) => {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timer);
+          player.onended = null;
+          player.onerror = null;
+          player.onplaying = null;
+          if (sid !== speechSessionId) return resolve();
+          if (fallback) playSingleSegmentLocal(text, rate, sid).then(resolve);
+          else resolve();
+        };
+
+        const timer = setTimeout(() => done(true), 3500);
+        player.onplaying = () => {
+          clearTimeout(timer);
+          player.playbackRate = rate;
+          player.preservesPitch = true;
+          player.webkitPreservesPitch = true;
+        };
+        player.onended = () => done(false);
+        player.onerror = () => done(true);
+
+        player.src = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&type=1`;
+        player.playbackRate = rate;
+        player.preservesPitch = true;
+        player.webkitPreservesPitch = true;
+
+        const p = player.play();
+        if (p && typeof p.catch === 'function') p.catch(() => done(true));
+      });
+    }
+
+    function playSingleSegmentLocal(text, rate, sid) {
+      return new Promise((resolve) => {
+        if (sid !== speechSessionId || !('speechSynthesis' in window)) return resolve();
+        try {
+          window.speechSynthesis.cancel();
+          const u = new SpeechSynthesisUtterance(text);
+          u.lang = 'en-GB';
+          u.rate = rate;
+          const voices = window.speechSynthesis.getVoices();
+          const gb = voices.find(v => v.lang && v.lang.toLowerCase().includes('en-gb'));
+          if (gb) u.voice = gb;
+          u.onend = () => resolve();
+          u.onerror = () => resolve();
+          window.speechSynthesis.speak(u);
+        } catch (_) { resolve(); }
+      });
+    }
+
+    async function speakBritish(rawText, btnEl = null) {
+      stopSpeech();
+      const segs = splitSpeechSegments(rawText);
+      if (!segs.length) return;
+
+      const sid = speechSessionId;
+      const rate = state.speedMode === 'slow' ? 0.72 : 0.95;
+
+      if (btnEl) {
+        activeSpeakBtn = btnEl;
+        btnEl.classList.add('is-speaking');
+      }
+
+      for (let i = 0; i < segs.length; i++) {
+        if (sid !== speechSessionId) break;
+        await playSingleSegmentOnline(segs[i], rate, sid);
+        if (i < segs.length - 1 && sid === speechSessionId) {
+          await new Promise(r => { speechGapTimer = setTimeout(r, 400); });
+        }
+      }
+
+      if (sid === speechSessionId && activeSpeakBtn) {
+        activeSpeakBtn.classList.remove('is-speaking');
+        activeSpeakBtn = null;
+      }
+    }
+
+    /**
+     * =========================================================================
+     * 4. CONFETTI CELEBRATION PARTICLES
+     * =========================================================================
+     */
+    const confettiCanvas = document.getElementById('confettiCanvas');
+    const cCtx = confettiCanvas.getContext('2d');
+    let confettiParticles = [];
+    let confettiAnim = null;
+
+    function resizeConfetti() {
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeConfetti);
+    resizeConfetti();
+
+    function launchConfetti(count = 65) {
+      const colors = ['#F59E0B', '#0EA5E9', '#10B981', '#F43F5E', '#8B5CF6', '#FCD34D'];
+      for (let i = 0; i < count; i++) {
+        confettiParticles.push({
+          x: window.innerWidth * (0.25 + Math.random() * 0.5),
+          y: window.innerHeight * 0.4,
+          vx: (Math.random() - 0.5) * 14,
+          vy: -Math.random() * 14 - 4,
+          size: Math.random() * 8 + 5,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rot: Math.random() * 360,
+          vrot: (Math.random() - 0.5) * 12,
+          life: 1
+        });
+      }
+      if (!confettiAnim) animateConfetti();
+    }
+
+    function animateConfetti() {
+      cCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      confettiParticles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.35;
+        p.rot += p.vrot;
+        p.life -= 0.013;
+        cCtx.save();
+        cCtx.globalAlpha = Math.max(0, p.life);
+        cCtx.translate(p.x, p.y);
+        cCtx.rotate(p.rot * Math.PI / 180);
+        cCtx.fillStyle = p.color;
+        cCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+        cCtx.restore();
+      });
+      confettiParticles = confettiParticles.filter(p => p.life > 0 && p.y < window.innerHeight + 30);
+      if (confettiParticles.length > 0) {
+        confettiAnim = requestAnimationFrame(animateConfetti);
+      } else {
+        confettiAnim = null;
+        cCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      }
+    }
+
+    /**
+     * =========================================================================
+     * 5. HUD, STARS, NAVIGATION & HELPERS
+     * =========================================================================
+     */
+    let currentIsland = null;
+    let currentMode = 'flashcard';
+    let isRescuePractice = false;
+
+    function getAllWords() {
+      return ISLANDS.flatMap(isl => isl.words.map(w => ({ ...w, islandId: isl.id, islandTitle: isl.title })));
+    }
+
+    function updateHUD() {
+      document.getElementById('starCount').textContent = state.stars;
+      document.getElementById('stickerBadge').textContent = `${state.collectedStickers.length}/${STICKERS.length}`;
+      document.getElementById('rescueBadge').textContent = state.wrongIds.length;
+      document.getElementById('speedToggleBtn').textContent = state.speedMode === 'slow' ? '🐢 慢速' : '🐇 正常';
+      document.getElementById('sfxToggleBtn').textContent = state.sfxEnabled ? '🔔' : '🔕';
+    }
+
+    function addStars(amount) {
+      state.stars += amount;
+      saveState();
+      updateHUD();
+      const icon = document.getElementById('starIcon');
+      icon.classList.remove('animate-star-pop');
+      void icon.offsetWidth;
+      icon.classList.add('animate-star-pop');
+    }
+
+    function toggleSpeed() {
+      state.speedMode = state.speedMode === 'normal' ? 'slow' : 'normal';
+      saveState();
+      updateHUD();
+      showToast(state.speedMode === 'slow' ? '🐢 已切换为慢速跟读' : '🐇 已切换为正常英音语速');
+    }
+
+    function toggleSfx() {
+      state.sfxEnabled = !state.sfxEnabled;
+      saveState();
+      updateHUD();
+      showToast(state.sfxEnabled ? '🔔 游戏音效已开启' : '🔕 游戏音效已静音');
+    }
+
+    function showView(viewId) {
+      stopSpeech();
+      ['view-home', 'view-island', 'view-stickers', 'view-rescue'].forEach(id => {
+        document.getElementById(id).classList.toggle('hidden', id !== viewId);
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function goHome() {
+      isRescuePractice = false;
+      currentIsland = null;
+      renderHomeMap();
+      showView('view-home');
+    }
+
+    function renderHomeMap() {
+      const all = getAllWords();
+      const masteredSet = new Set(state.masteredIds);
+      document.getElementById('homeMasteredNum').textContent = all.filter(w => masteredSet.has(w.id)).length;
+      document.getElementById('homeTotalNum').textContent = all.length;
+
+      const grid = document.getElementById('islandMapGrid');
+      grid.innerHTML = ISLANDS.map(isl => {
+        const done = isl.words.filter(w => masteredSet.has(w.id)).length;
+        const pct = Math.round((done / isl.words.length) * 100);
+        const stars = state.islandStars[isl.id] || 0;
+        const starStr = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+
+        return `
+          <button onclick="openIsland('${isl.id}')" class="island-card p-5 text-left flex flex-col justify-between gap-3 w-full">
+            <div class="flex items-start justify-between gap-2">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br ${isl.color} flex items-center justify-center text-3xl shadow-md shrink-0">
+                ${isl.emoji}
+              </div>
+              <span class="text-lg tracking-wider bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-xl">${starStr}</span>
+            </div>
+            <div>
+              <h3 class="text-base sm:text-lg font-black text-slate-800">${isl.title}</h3>
+              <p class="text-xs font-bold text-slate-500 mt-0.5">已学会 ${done} / ${isl.words.length} 个单词</p>
+            </div>
+            <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r ${isl.color} rounded-full transition-all duration-500" style="width:${pct}%"></div>
+            </div>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function openIsland(islandId) {
+      isRescuePractice = false;
+      currentIsland = ISLANDS.find(i => i.id === islandId);
+      if (!currentIsland) return;
+      updateIslandHeader();
+      document.getElementById('islandModeTabs').classList.remove('hidden');
+      showView('view-island');
+      switchIslandMode('flashcard');
+    }
+
+    function updateIslandHeader() {
+      if (!currentIsland) return;
+      const masteredSet = new Set(state.masteredIds);
+      const done = currentIsland.words.filter(w => masteredSet.has(w.id)).length;
+      const stars = state.islandStars[currentIsland.id] || 0;
+      document.getElementById('islandEmoji').textContent = currentIsland.emoji;
+      document.getElementById('islandTitle').textContent = currentIsland.title;
+      document.getElementById('islandSub').textContent = isRescuePractice
+        ? `待消灭错题小怪兽：${state.wrongIds.length} 个`
+        : `已学会 ${done} / ${currentIsland.words.length} 词`;
+      document.getElementById('islandStarDisplay').textContent = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+    }
+
+    function awardIslandStar(islandId) {
+      if (!islandId || isRescuePractice) return;
+      const cur = state.islandStars[islandId] || 0;
+      if (cur < 3) {
+        state.islandStars[islandId] = cur + 1;
+        saveState();
+        updateIslandHeader();
+      }
+    }
+
+    function switchIslandMode(mode) {
+      stopSpeech();
+      currentMode = mode;
+      ['flashcard', 'quiz', 'spelling', 'sentences'].forEach(m => {
+        const btn = document.getElementById(`modeBtn-${m}`);
+        const panel = document.getElementById(`panel-${m}`);
+        const active = m === mode;
+        panel.classList.toggle('hidden', !active);
+        btn.className = `btn-3d py-3 px-2 rounded-2xl text-sm font-extrabold min-h-[52px] ${active ? 'btn-blue' : 'btn-cream'}`;
+      });
+
+      if (mode === 'flashcard') initFlashcards();
+      else if (mode === 'quiz') startQuizRound();
+      else if (mode === 'spelling') startSpellingRound();
+      else if (mode === 'sentences') renderSentences();
+    }
+
+    /**
+     * =========================================================================
+     * 6. MODE 1: FLASHCARDS (词卡热身)
+     * =========================================================================
+     */
+    let fcIndex = 0;
+    let fcFlipped = false;
+
+    function initFlashcards() {
+      fcIndex = 0;
+      fcFlipped = false;
+      renderFc();
+    }
+
+    function renderFc() {
+      const words = currentIsland.words;
+      const w = words[fcIndex];
+      fcFlipped = false;
+      document.getElementById('fcCardInner').classList.remove('rotate-y-180');
+      document.getElementById('fcProgress').textContent = `${fcIndex + 1} / ${words.length}`;
+      document.getElementById('fcFrontEmoji').textContent = w.emoji;
+      document.getElementById('fcFrontWord').textContent = w.en;
+      document.getElementById('fcBackEmoji').textContent = w.emoji;
+      document.getElementById('fcBackMeaning').textContent = w.cn;
+      document.getElementById('fcBackWord').textContent = w.en;
+
+      const isMastered = state.masteredIds.includes(w.id);
+      document.getElementById('fcMasteredTag').classList.toggle('hidden', !isMastered);
+      document.getElementById('fcLearnBtn').textContent = isMastered ? '已学会 ✓' : '学会了 +1⭐';
+
+      speakBritish(w.en, document.getElementById('fcSpeakBtn'));
+    }
+
+    function flipFlashcard() {
+      playSfx('tap');
+      fcFlipped = !fcFlipped;
+      document.getElementById('fcCardInner').classList.toggle('rotate-y-180', fcFlipped);
+      if (fcFlipped) speakBritish(currentIsland.words[fcIndex].en);
+    }
+
+    function speakCurrentFc(btn) {
+      speakBritish(currentIsland.words[fcIndex].en, btn);
+    }
+
+    function nextFc() {
+      playSfx('tap');
+      fcIndex = (fcIndex + 1) % currentIsland.words.length;
+      renderFc();
+    }
+
+    function prevFc() {
+      playSfx('tap');
+      fcIndex = (fcIndex - 1 + currentIsland.words.length) % currentIsland.words.length;
+      renderFc();
+    }
+
+    function markFcLearned() {
+      const w = currentIsland.words[fcIndex];
+      if (!state.masteredIds.includes(w.id)) {
+        state.masteredIds.push(w.id);
+        addStars(1);
+        playSfx('correct');
+        showToast(`太棒了！学会 "${w.en}" +1⭐`);
+        updateIslandHeader();
+      } else {
+        playSfx('tap');
+      }
+      nextFc();
+    }
+
+    /**
+     * =========================================================================
+     * 7. MODE 2: LISTENING QUIZ (听音夺宝 - 5题一局)
+     * =========================================================================
+     */
+    let quizQueue = [];
+    let quizPos = 0;
+    let quizCombo = 0;
+    let quizCorrectCount = 0;
+    let quizLocked = false;
+
+    function getPracticePool() {
+      if (isRescuePractice) {
+        const set = new Set(state.wrongIds);
+        return getAllWords().filter(w => set.has(w.id));
+      }
+      return [...currentIsland.words];
+    }
+
+    function startQuizRound() {
+      const pool = getPracticePool();
+      if (!pool.length) {
+        showToast('没有可练习的单词啦！');
+        goHome();
+        return;
+      }
+      quizQueue = shuffle([...pool]).slice(0, Math.min(5, pool.length));
+      quizPos = 0;
+      quizCombo = 0;
+      quizCorrectCount = 0;
+      document.getElementById('quizPlayBox').classList.remove('hidden');
+      document.getElementById('quizFinishBox').classList.add('hidden');
+      renderQuizQuestion();
+    }
+
+    function renderQuizQuestion() {
+      quizLocked = false;
+      const target = quizQueue[quizPos];
+      document.getElementById('quizRoundLabel').textContent = `第 ${quizPos + 1} / ${quizQueue.length} 题`;
+      document.getElementById('quizHintWord').classList.add('hidden');
+      document.getElementById('quizHintWord').textContent = target.en;
+
+      const comboBadge = document.getElementById('quizComboBadge');
+      if (quizCombo >= 2) {
+        comboBadge.textContent = `🔥 连对 ${quizCombo}`;
+        comboBadge.classList.remove('hidden');
+      } else {
+        comboBadge.classList.add('hidden');
+      }
+
+      const allWords = getAllWords();
+      const distractors = shuffle(allWords.filter(w => w.id !== target.id && w.cn !== target.cn)).slice(0, 3);
+      const options = shuffle([target, ...distractors]);
+
+      const colors = [
+        'bg-sky-50 border-sky-200 hover:border-sky-400',
+        'bg-amber-50 border-amber-200 hover:border-amber-400',
+        'bg-emerald-50 border-emerald-200 hover:border-emerald-400',
+        'bg-rose-50 border-rose-200 hover:border-rose-400'
+      ];
+
+      const grid = document.getElementById('quizOptionsGrid');
+      grid.innerHTML = '';
+      options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `btn-3d p-4 rounded-2xl border-2 text-left flex items-center gap-3 min-h-[68px] shadow-sm ${colors[idx]}`;
+        btn.innerHTML = `
+          <span class="text-3xl shrink-0">${opt.emoji}</span>
+          <span class="text-base sm:text-lg font-extrabold text-slate-800">${opt.cn}</span>
+        `;
+        btn.onclick = () => handleQuizAnswer(opt, target, btn);
+        grid.appendChild(btn);
+      });
+
+      setTimeout(() => speakBritish(target.en, document.getElementById('quizSpeakerBtn')), 180);
+    }
+
+    function playQuizAudio(btn) {
+      if (quizQueue[quizPos]) speakBritish(quizQueue[quizPos].en, btn);
+    }
+
+    function handleQuizAnswer(opt, target, btn) {
+      if (quizLocked) return;
+      if (opt.id === target.id) {
+        quizLocked = true;
+        quizCombo++;
+        quizCorrectCount++;
+        playSfx('correct');
+        addStars(2);
+        btn.className = 'p-4 rounded-2xl border-4 border-emerald-500 bg-emerald-100 text-left flex items-center gap-3 min-h-[68px] animate-pop';
+        document.getElementById('quizHintWord').classList.remove('hidden');
+
+        if (!state.masteredIds.includes(target.id)) state.masteredIds.push(target.id);
+        if (isRescuePractice) {
+          state.wrongIds = state.wrongIds.filter(id => id !== target.id);
+          saveState();
+          updateHUD();
+        }
+        saveState();
+
+        setTimeout(() => {
+          quizPos++;
+          if (quizPos < quizQueue.length) renderQuizQuestion();
+          else finishQuizRound();
+        }, 780);
+      } else {
+        quizCombo = 0;
+        playSfx('wrong');
+        btn.classList.remove('animate-shake');
+        void btn.offsetWidth;
+        btn.classList.add('animate-shake');
+        if (!state.wrongIds.includes(target.id)) {
+          state.wrongIds.push(target.id);
+          saveState();
+          updateHUD();
+        }
+        speakBritish(target.en, document.getElementById('quizSpeakerBtn'));
+      }
+    }
+
+    function finishQuizRound() {
+      playSfx('fanfare');
+      launchConfetti(70);
+      addStars(5);
+      awardIslandStar(currentIsland?.id);
+      document.getElementById('quizPlayBox').classList.add('hidden');
+      document.getElementById('quizFinishBox').classList.remove('hidden');
+      document.getElementById('quizFinishStats').textContent = `本局完成 ${quizQueue.length} 题，表现超棒！`;
+    }
+
+    /**
+     * =========================================================================
+     * 8. MODE 3: LETTER-TILE SPELLING (字母积木拼词 - 免键盘！)
+     * =========================================================================
+     */
+    let spellQueue = [];
+    let spellPos = 0;
+    let spellSlots = []; // { char, fixed, tileId }
+    let spellTiles = []; // { id, char, used }
+    let spellDoneLock = false;
+
+    function startSpellingRound() {
+      const pool = getPracticePool();
+      if (!pool.length) {
+        showToast('没有可拼写的单词啦！');
+        goHome();
+        return;
+      }
+      spellQueue = shuffle([...pool]).slice(0, Math.min(5, pool.length));
+      spellPos = 0;
+      document.getElementById('spellPlayBox').classList.remove('hidden');
+      document.getElementById('spellFinishBox').classList.add('hidden');
+      setupSpellWord();
+    }
+
+    function setupSpellWord() {
+      spellDoneLock = false;
+      const item = spellQueue[spellPos];
+      document.getElementById('spellRoundLabel').textContent = `第 ${spellPos + 1} / ${spellQueue.length} 词`;
+      document.getElementById('spellEmoji').textContent = item.emoji;
+      document.getElementById('spellMeaning').textContent = item.cn;
+
+      // Build slots: spaces, apostrophes, hyphens are pre-filled automatically
+      spellSlots = [];
+      const lettersNeeded = [];
+      for (const ch of item.en) {
+        if (ch === ' ' || ch === "'" || ch === '-') {
+          spellSlots.push({ char: ch, fixed: true, tileId: null });
+        } else {
+          spellSlots.push({ char: '', expected: ch, fixed: false, tileId: null });
+          lettersNeeded.push(ch);
+        }
+      }
+
+      // Add 2 random distractor letters
+      const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+      const distractors = [];
+      for (let i = 0; i < 2; i++) {
+        distractors.push(alphabet[Math.floor(Math.random() * alphabet.length)]);
+      }
+
+      spellTiles = shuffle([...lettersNeeded, ...distractors]).map((ch, idx) => ({
+        id: `t-${idx}`,
+        char: ch,
+        used: false
+      }));
+
+      renderSpellBoard();
+      setTimeout(() => speakBritish(item.en, document.getElementById('spellAudioBtn')), 180);
+    }
+
+    function playSpellAudio(btn) {
+      if (spellQueue[spellPos]) speakBritish(spellQueue[spellPos].en, btn);
+    }
+
+    function renderSpellBoard() {
+      const slotsBox = document.getElementById('spellSlotsBox');
+      slotsBox.innerHTML = '';
+      spellSlots.forEach((slot, idx) => {
+        if (slot.fixed) {
+          const sp = document.createElement('span');
+          sp.className = slot.char === ' ' ? 'w-4 sm:w-5 inline-block' : 'text-2xl font-black text-slate-400 px-0.5';
+          sp.textContent = slot.char === ' ' ? '' : slot.char;
+          slotsBox.appendChild(sp);
+        } else {
+          const btn = document.createElement('button');
+          btn.className = slot.char
+            ? 'w-11 h-12 sm:w-12 sm:h-14 rounded-2xl bg-sky-500 text-white text-xl sm:text-2xl font-black shadow-md active:scale-95 transition'
+            : 'w-11 h-12 sm:w-12 sm:h-14 rounded-2xl bg-sky-50 border-2 border-sky-200 text-xl font-black';
+          btn.textContent = slot.char;
+          btn.onclick = () => removeSlotLetter(idx);
+          slotsBox.appendChild(btn);
+        }
+      });
+
+      const tilesBox = document.getElementById('spellTilesBox');
+      tilesBox.innerHTML = '';
+      const tileColors = ['btn-sunny', 'btn-mint', 'btn-purple', 'btn-coral', 'btn-blue'];
+      spellTiles.forEach((tile, idx) => {
+        const btn = document.createElement('button');
+        btn.disabled = tile.used;
+        btn.className = tile.used
+          ? 'w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-slate-100 text-slate-300 text-xl sm:text-2xl font-black cursor-default'
+          : `btn-3d ${tileColors[idx % tileColors.length]} w-12 h-12 sm:w-14 sm:h-14 rounded-2xl text-xl sm:text-2xl font-black`;
+        btn.textContent = tile.char;
+        btn.onclick = () => placeTileLetter(tile.id);
+        tilesBox.appendChild(btn);
+      });
+    }
+
+    function placeTileLetter(tileId) {
+      if (spellDoneLock) return;
+      const tile = spellTiles.find(t => t.id === tileId);
+      if (!tile || tile.used) return;
+      const emptyIdx = spellSlots.findIndex(s => !s.fixed && !s.char);
+      if (emptyIdx === -1) return;
+
+      playSfx('tap');
+      tile.used = true;
+      spellSlots[emptyIdx].char = tile.char;
+      spellSlots[emptyIdx].tileId = tile.id;
+      renderSpellBoard();
+      checkSpellCompletion();
+    }
+
+    function removeSlotLetter(slotIdx) {
+      if (spellDoneLock) return;
+      const slot = spellSlots[slotIdx];
+      if (!slot || slot.fixed || !slot.char) return;
+      playSfx('tap');
+      const tile = spellTiles.find(t => t.id === slot.tileId);
+      if (tile) tile.used = false;
+      slot.char = '';
+      slot.tileId = null;
+      renderSpellBoard();
+    }
+
+    function resetCurrentSpellSlots() {
+      if (spellDoneLock) return;
+      playSfx('tap');
+      spellSlots.forEach(s => { if (!s.fixed) { s.char = ''; s.tileId = null; } });
+      spellTiles.forEach(t => t.used = false);
+      renderSpellBoard();
+    }
+
+    function useSpellHint() {
+      if (spellDoneLock) return;
+      // Find first empty or wrong slot
+      const targetIdx = spellSlots.findIndex(s => !s.fixed && s.char.toLowerCase() !== s.expected.toLowerCase());
+      if (targetIdx === -1) return;
+
+      // Return current wrong tile if any
+      if (spellSlots[targetIdx].tileId) {
+        const oldTile = spellTiles.find(t => t.id === spellSlots[targetIdx].tileId);
+        if (oldTile) oldTile.used = false;
+      }
+
+      const neededChar = spellSlots[targetIdx].expected;
+      let matchingTile = spellTiles.find(t => !t.used && t.char.toLowerCase() === neededChar.toLowerCase());
+      if (!matchingTile) {
+        // Free it from a wrong slot if placed elsewhere
+        const wrongSlot = spellSlots.find(s => !s.fixed && s.char.toLowerCase() === neededChar.toLowerCase() && s.expected.toLowerCase() !== neededChar.toLowerCase());
+        if (wrongSlot) {
+          matchingTile = spellTiles.find(t => t.id === wrongSlot.tileId);
+          wrongSlot.char = '';
+          wrongSlot.tileId = null;
+        }
+      }
+      if (matchingTile) {
+        playSfx('tap');
+        matchingTile.used = true;
+        spellSlots[targetIdx].char = matchingTile.char;
+        spellSlots[targetIdx].tileId = matchingTile.id;
+        renderSpellBoard();
+        checkSpellCompletion();
+      }
+    }
+
+    function checkSpellCompletion() {
+      const allFilled = spellSlots.every(s => s.fixed || s.char !== '');
+      if (!allFilled) return;
+
+      const item = spellQueue[spellPos];
+      const attempt = spellSlots.map(s => s.char).join('');
+      if (attempt.toLowerCase() === item.en.toLowerCase()) {
+        spellDoneLock = true;
+        playSfx('correct');
+        addStars(3);
+        showToast(`拼对啦！"${item.en}" +3⭐`);
+        speakBritish(item.en);
+
+        if (!state.masteredIds.includes(item.id)) state.masteredIds.push(item.id);
+        if (isRescuePractice) {
+          state.wrongIds = state.wrongIds.filter(id => id !== item.id);
+          saveState();
+          updateHUD();
+        }
+        saveState();
+
+        setTimeout(() => {
+          spellPos++;
+          if (spellPos < spellQueue.length) setupSpellWord();
+          else finishSpellingRound();
+        }, 1100);
+      } else {
+        playSfx('wrong');
+        const box = document.getElementById('spellSlotsBox');
+        box.classList.remove('animate-shake');
+        void box.offsetWidth;
+        box.classList.add('animate-shake');
+        if (!state.wrongIds.includes(item.id)) {
+          state.wrongIds.push(item.id);
+          saveState();
+          updateHUD();
+        }
+        showToast('顺序有一点点小偏差，点一下字母块调整吧！');
+      }
+    }
+
+    function finishSpellingRound() {
+      playSfx('fanfare');
+      launchConfetti(80);
+      addStars(5);
+      awardIslandStar(currentIsland?.id);
+      document.getElementById('spellPlayBox').classList.add('hidden');
+      document.getElementById('spellFinishBox').classList.remove('hidden');
+    }
+
+    /**
+     * =========================================================================
+     * 9. MODE 4: SENTENCES & CHECKLIST (句型跟读打卡)
+     * =========================================================================
+     */
+    function renderSentences() {
+      const list = document.getElementById('sentencesList');
+      list.innerHTML = currentIsland.sentences.map((sent, idx) => {
+        const key = `${currentIsland.id}-s-${idx}`;
+        const done = !!state.checkedSentences[key];
+        return `
+          <div class="bg-white rounded-[24px] border-2 ${done ? 'border-emerald-200 bg-emerald-50/30' : 'border-sky-100'} shadow-sm p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-start gap-3">
+              <button onclick="speakBritish('${escapeJs(sent)}', this)" class="btn-3d btn-blue w-12 h-12 rounded-2xl text-xl flex items-center justify-center shrink-0">
+                🔊
+              </button>
+              <p class="text-base sm:text-lg font-extrabold text-slate-800 leading-relaxed pt-1">${escapeHtml(sent)}</p>
+            </div>
+            <button onclick="checkSentence('${key}')" class="btn-3d ${done ? 'btn-cream text-emerald-600' : 'btn-mint'} px-4 py-3 rounded-2xl text-sm font-extrabold shrink-0 min-h-[48px]">
+              ${done ? '✅ 已打卡' : '我读过啦 +2⭐'}
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function checkSentence(key) {
+      if (!state.checkedSentences[key]) {
+        state.checkedSentences[key] = true;
+        addStars(2);
+        playSfx('correct');
+        showToast('大声跟读真棒！奖励 +2⭐');
+        renderSentences();
+      } else {
+        playSfx('tap');
+      }
+    }
+
+    /**
+     * =========================================================================
+     * 10. TEXTBOOK STICKER BLIND BOX & ALBUM (课本贴纸盲盒)
+     * =========================================================================
+     */
+    let currentRevealedSticker = null;
+    let isDrawingBox = false;
+
+    function openStickerView() {
+      renderStickerAlbum();
+      showView('view-stickers');
+    }
+
+    function renderStickerAlbum() {
+      const collected = new Set(state.collectedStickers);
+      document.getElementById('albumProgressText').textContent = `已收集 ${collected.size} / ${STICKERS.length}`;
+
+      const grid = document.getElementById('stickerAlbumGrid');
+      grid.innerHTML = STICKERS.map(st => {
+        const unlocked = collected.has(st.id);
+        const isSSR = st.rarity === 'SSR';
+        if (!unlocked) {
+          return `
+            <div class="rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 p-3.5 text-center flex flex-col items-center justify-center min-h-[126px]">
+              <div class="text-4xl opacity-20 grayscale">❓</div>
+              <div class="text-xs font-bold text-slate-400 mt-2">未解锁贴纸</div>
+            </div>
+          `;
+        }
+        return `
+          <button onclick="speakBritish('${escapeJs(st.en)}', this)" class="btn-3d rounded-2xl border-2 ${isSSR ? 'ssr-glow' : 'bg-sand-50 border-amber-200'} p-3 text-center flex flex-col items-center justify-between min-h-[126px] shadow-sm">
+            <span class="text-[10px] font-black px-2 py-0.5 rounded-full ${isSSR ? 'bg-amber-500 text-white' : (st.rarity === '稀有' ? 'bg-purple-100 text-purple-700' : 'bg-sky-100 text-sky-700')}">${st.rarity}</span>
+            <div class="text-4xl my-1">${st.emoji}</div>
+            <div class="text-xs font-black text-slate-800 leading-tight">${st.cn}</div>
+            <div class="text-[11px] font-bold text-sky-600">${st.en}</div>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function drawBlindBox() {
+      if (isDrawingBox) return;
+      if (state.stars < 10) {
+        playSfx('wrong');
+        showToast('星星还不够 10 颗哦，去小岛闯关赚星星吧！⭐');
+        return;
+      }
+
+      isDrawingBox = true;
+      state.stars -= 10;
+      saveState();
+      updateHUD();
+
+      const chest = document.getElementById('treasureChest');
+      chest.classList.remove('animate-chest');
+      void chest.offsetWidth;
+      chest.classList.add('animate-chest');
+      playSfx('tap');
+
+      setTimeout(() => {
+        const picked = STICKERS[Math.floor(Math.random() * STICKERS.length)];
+        const isDup = state.collectedStickers.includes(picked.id);
+        if (!isDup) {
+          state.collectedStickers.push(picked.id);
+        } else {
+          state.stars += 4;
+        }
+        saveState();
+        updateHUD();
+        renderStickerAlbum();
+
+        currentRevealedSticker = picked;
+        playSfx('fanfare');
+        launchConfetti(90);
+
+        const card = document.getElementById('stickerRevealCard');
+        card.className = `rounded-[30px] border-4 shadow-2xl max-w-sm w-full p-6 text-center space-y-3 animate-pop ${picked.rarity === 'SSR' ? 'ssr-glow' : 'bg-white border-amber-300'}`;
+        const badge = document.getElementById('revealRarityBadge');
+        badge.textContent = picked.rarity === 'SSR' ? '✨ 闪卡 SSR ✨' : (picked.rarity === '稀有' ? '💜 稀有贴纸' : '💙 普通贴纸');
+        badge.className = `inline-block px-3.5 py-1 rounded-full text-xs font-black ${picked.rarity === 'SSR' ? 'bg-amber-500 text-white' : (picked.rarity === '稀有' ? 'bg-purple-100 text-purple-700' : 'bg-sky-100 text-sky-700')}`;
+
+        document.getElementById('revealEmoji').textContent = picked.emoji;
+        document.getElementById('revealCn').textContent = picked.cn;
+        document.getElementById('revealEn').textContent = picked.en;
+        const dupEl = document.getElementById('revealDupMsg');
+        if (isDup) {
+          dupEl.textContent = '重复贴纸转化 +4⭐ 幸运星！';
+          dupEl.classList.remove('hidden');
+        } else {
+          dupEl.classList.add('hidden');
+        }
+
+        document.getElementById('stickerRevealModal').classList.remove('hidden');
+        speakBritish(picked.en);
+        isDrawingBox = false;
+      }, 760);
+    }
+
+    function closeRevealModal() {
+      document.getElementById('stickerRevealModal').classList.add('hidden');
+    }
+
+    /**
+     * =========================================================================
+     * 11. WRONG-WORD RESCUE (错题小怪兽)
+     * =========================================================================
+     */
+    function openRescueView() {
+      const set = new Set(state.wrongIds);
+      const list = getAllWords().filter(w => set.has(w.id));
+      document.getElementById('rescueEmpty').classList.toggle('hidden', list.length > 0);
+      document.getElementById('rescueActionBtns').classList.toggle('hidden', list.length === 0);
+
+      document.getElementById('rescueList').innerHTML = list.map(w => `
+        <div class="bg-rose-50/60 border-2 border-rose-100 rounded-2xl p-4 flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <span class="text-3xl">${w.emoji}</span>
+            <div>
+              <div class="text-lg font-black text-slate-800">${w.en}</div>
+              <div class="text-xs font-bold text-slate-500">${w.cn}</div>
+            </div>
+          </div>
+          <button onclick="speakBritish('${escapeJs(w.en)}', this)" class="btn-3d btn-blue px-4 py-2 rounded-xl text-sm font-extrabold min-h-[44px]">🔊 听</button>
+        </div>
+      `).join('');
+
+      showView('view-rescue');
+    }
+
+    function startRescuePractice(mode) {
+      if (!state.wrongIds.length) return;
+      isRescuePractice = true;
+      currentIsland = { id: 'rescue', emoji: '👾', title: '错题小怪兽营救战', words: getPracticePool(), sentences: [] };
+      updateIslandHeader();
+      document.getElementById('islandModeTabs').classList.add('hidden');
+      showView('view-island');
+      switchIslandMode(mode);
+    }
+
+    /**
+     * =========================================================================
+     * 12. SETTINGS MODAL, TOAST & UTILS
+     * =========================================================================
+     */
+    function openSettingsModal() {
+      hideResetConfirm();
+      document.getElementById('settingsModal').classList.remove('hidden');
+    }
+    function closeSettingsModal() {
+      document.getElementById('settingsModal').classList.add('hidden');
+    }
+    function showResetConfirm() {
+      document.getElementById('btnAskReset').classList.add('hidden');
+      document.getElementById('resetConfirmBtns').classList.remove('hidden');
+    }
+    function hideResetConfirm() {
+      document.getElementById('btnAskReset').classList.remove('hidden');
+      document.getElementById('resetConfirmBtns').classList.add('hidden');
+    }
+    function confirmResetAll() {
+      localStorage.removeItem(STORAGE_KEY);
+      state = { stars: 10, speedMode: 'normal', sfxEnabled: true, masteredIds: [], wrongIds: [], checkedSentences: {}, collectedStickers: [], islandStars: {} };
+      saveState();
+      updateHUD();
+      closeSettingsModal();
+      goHome();
+      showToast('已重置所有进度，重新开启小岛大冒险！');
+    }
+
+    function showToast(msg) {
+      const box = document.getElementById('toastContainer');
+      const el = document.createElement('div');
+      el.className = 'bg-slate-800/95 text-white px-5 py-2.5 rounded-full text-sm font-extrabold shadow-xl animate-pop';
+      el.textContent = msg;
+      box.appendChild(el);
+      setTimeout(() => {
+        el.style.opacity = '0';
+        el.style.transition = 'opacity 0.25s';
+        setTimeout(() => el.remove(), 260);
+      }, 2000);
+    }
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function escapeHtml(s) {
+      return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+    function escapeJs(s) {
+      return String(s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    }
+
+    // Boot App
+    window.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      updateHUD();
+      goHome();
+    });
+  </script>
+</body>
+</html>
